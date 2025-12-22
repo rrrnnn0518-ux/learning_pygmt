@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>PyGMT 快速入門｜把地球科學圖做得又快又美</title>
-  <meta name="description" content="用趣味方式介紹 PyGMT：它是什麼、能做什麼、如何安裝、常用範例與地球科學繪圖小技巧。">
+  <meta name="description" content="用趣味方式介紹 PyGMT：它是什麼、能做什麼、如何安裝、常用範例與地球科學繪圖小技巧，並收錄 ROSES Unit 8 PyGMT 影片精華與官方 Overview。">
   <style>
     :root{
       --bg:#0b1020;
@@ -265,7 +265,7 @@
       border-radius: 14px;
       border:1px solid rgba(34,48,99,.6);
       background: rgba(7,10,20,.55);
-      color: var(--muted);
+      color: var (--muted);
       font-size:12.5px;
       line-height:1.7;
       display:none;
@@ -294,6 +294,33 @@
       z-index:50;
       backdrop-filter: blur(10px);
     }
+
+    /* Video */
+    .video-wrap{
+      border-radius: 18px;
+      overflow:hidden;
+      border:1px solid rgba(34,48,99,.75);
+      background: rgba(7,10,20,.55);
+    }
+    .video{
+      width:100%;
+      aspect-ratio: 16 / 9;
+      border:0;
+      display:block;
+    }
+    .links{
+      display:flex;flex-wrap:wrap;gap:10px;margin-top:10px
+    }
+    .linkbtn{
+      text-decoration:none;
+      padding:9px 10px;
+      border-radius:12px;
+      border:1px solid rgba(34,48,99,.65);
+      background: rgba(17,26,51,.35);
+      color: var(--text);
+      font-size:12px;
+    }
+    .linkbtn:hover{border-color: rgba(124,92,255,.55)}
   </style>
 </head>
 
@@ -310,6 +337,8 @@
       <div class="nav-links">
         <a class="pill" href="#what">它是什麼</a>
         <a class="pill" href="#why">為什麼用</a>
+        <a class="pill" href="#video">影片精華</a>
+        <a class="pill" href="#official">官方 Overview</a>
         <a class="pill" href="#install">安裝</a>
         <a class="pill" href="#recipes">範例食譜</a>
         <a class="pill" href="#tips">繪圖小技巧</a>
@@ -345,7 +374,7 @@
             </div>
             <div class="box">
               <strong>為什麼看起來很專業</strong>
-              <span>預設字體、刻度、投影、色階都偏向「出版級」習慣。</span>
+              <span>預設字體、刻度、線條、投影的細節控制偏向「出版級」習慣。</span>
             </div>
           </div>
         </div>
@@ -362,7 +391,7 @@
         </div>
         <div class="mini">
           <h3>🧯 小提醒（真實世界）</h3>
-          <p>資料格式很重要：GeoJSON / shapefile / 網格資料的欄位與幾何要正確，不然就會出現你看過的 warning。</p>
+          <p>資料格式很重要：GeoJSON / shapefile / 網格資料的欄位與幾何要正確，不然就會噴 warning。</p>
         </div>
       </div>
     </section>
@@ -406,6 +435,103 @@
           </ul>
           <div class="note">
             小策略：<b>資料分析用 pandas/xarray</b>，<b>高品質地圖用 PyGMT</b>。
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- VIDEO -->
+    <section id="video" class="grid">
+      <article class="card col-12">
+        <div class="section-title">
+          <h2>影片精華：ROSES Unit 8 – PyGMT（從 191 秒開始）</h2>
+          <small>直接嵌入到你的網站</small>
+        </div>
+        <div class="content">
+          <div class="video-wrap">
+            <iframe
+              class="video"
+              src="https://www.youtube-nocookie.com/embed/SSIGJEe0BIk?start=191&rel=0"
+              title="ROSES Unit 8 - PyGMT"
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+
+          <div class="links">
+            <a class="linkbtn" href="https://www.youtube.com/watch?v=SSIGJEe0BIk&t=191s" target="_blank" rel="noopener">在 YouTube 開啟（191s）</a>
+            <a class="linkbtn" href="https://www.pygmt.org/latest/overview.html" target="_blank" rel="noopener">官方 Overview（latest）</a>
+            <a class="linkbtn" href="https://www.pygmt.org/" target="_blank" rel="noopener">PyGMT 官網</a>
+          </div>
+
+          <p style="margin-top:12px">
+            這段教學（191s 以後）很適合拿來寫作業的「學習重點」：它走的是典型的研究出圖流程。
+          </p>
+
+          <ul>
+            <li><b>安裝與環境：</b>強烈建議 conda-forge；避免系統相依套件地雷。</li>
+            <li><b>地圖三要素：</b><code>region</code>（範圍）、<code>projection</code>（投影）、<code>frame</code>（框線/刻度/標題）。</li>
+            <li><b>疊圖觀念：</b>先底圖（海岸線/地形）→ 再疊資料（點、線）→ 最後加圖例與標註。</li>
+            <li><b>格網資料：</b>地形/海深用 <code>grdimage</code> 顯示，搭配 shading 增強立體感。</li>
+            <li><b>符號與圖例：</b>點的大小/顏色不是裝飾，是「資料語言」，legend 讓讀者不用猜。</li>
+          </ul>
+
+          <div class="note">
+            想把影片做成「時間戳筆記版」：你把字幕或筆記貼我，我可以幫你做成「時間戳 → 重點 → 對應 PyGMT 指令」。
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- OFFICIAL OVERVIEW -->
+    <section id="official" class="grid">
+      <article class="card col-12">
+        <div class="section-title">
+          <h2>官方 Overview 摘要（PyGMT.org）</h2>
+          <small>權威說法：寫進報告很加分</small>
+        </div>
+        <div class="content">
+          <p>
+            <b>PyGMT</b> 是 <b>Generic Mapping Tools (GMT)</b> 的 <b>Python wrapper</b>。
+            GMT 是在地球、海洋、行星科學等領域被廣泛使用的工具；
+            PyGMT 則提供更「Pythonic」的方式，讓你在 Python 工作流中完成空間資料處理與高品質出圖。
+          </p>
+
+          <div class="kpi">
+            <div class="box">
+              <strong>它能做什麼？</strong>
+              <span>空間資料處理：gridding、filtering、masking、FFT…以及高品質地圖與圖件繪製。</span>
+            </div>
+            <div class="box">
+              <strong>為什麼圖很乾淨？</strong>
+              <span>GMT 以高品質靜態向量圖為核心，可輸出 PDF/PNG/JPG 等格式。</span>
+            </div>
+            <div class="box">
+              <strong>效能特色</strong>
+              <span>速度快、記憶體效率佳，適合大量或高解析度出圖。</span>
+            </div>
+          </div>
+
+          <div class="callout">
+            ✅ 你可以把 PyGMT 視為：<b>「把 GMT 的出版級出圖能力，帶進 Python 的可重現分析流程」</b>
+          </div>
+
+          <p style="margin-top:12px">
+            小加分點：在報告中補一句「PyGMT 是在 2017 年左右發起的開源專案，將 GMT 以 Python 介面封裝」，
+            會讓你的來源看起來更「有根據」。
+          </p>
+
+          <div class="links">
+            <a class="linkbtn" href="https://www.pygmt.org/latest/overview.html" target="_blank" rel="noopener">官方 Overview（latest）</a>
+            <a class="linkbtn" href="https://www.pygmt.org/dev/overview.html" target="_blank" rel="noopener">官方 Overview（dev）</a>
+            <a class="linkbtn" href="https://www.pygmt.org/" target="_blank" rel="noopener">PyGMT 官網</a>
+          </div>
+
+          <div class="note">
+            寫作業用一句話模板：<br>
+            <b>「本研究/作業使用 PyGMT（GMT 的 Python wrapper）進行地理資料視覺化與高品質製圖。」</b>
           </div>
         </div>
       </article>
@@ -581,7 +707,7 @@ fig.show()</code></pre>
         <div class="content">
           <ul>
             <li><b>陰影（shading）</b>：地形一定要試 <code>grdgradient</code>，立體感差很多。</li>
-            <li><b>色階（cmap）</b>：地形用 <code>geo</code>、海深可用 <code>deep</code> 類型色階（視情境）。</li>
+            <li><b>色階（cmap）</b>：地形用 <code>geo</code>、海深可用適合的藍系色階（視情境）。</li>
             <li><b>框線與刻度一致</b>：<code>frame=["af", "+tTitle"]</code> 先固定風格，所有圖都用同一套。</li>
             <li><b>圖例與標註</b>：研究圖的「可讀性」很多時候是圖例與標註決勝負。</li>
             <li><b>可重現</b>：把 region、projection、cmap、字體參數集中在一段「設定區」。</li>
@@ -654,8 +780,7 @@ fig.show()</code></pre>
     <footer>
       <div class="note">
         你可以直接把這個檔案存成 <b>index.html</b> 打開就能看。<br/>
-        如果你希望我再加上：<b>（1）你的 repository 連結按鈕</b>、<b>（2）你的實際 PyGMT 程式碼區塊</b>、
-        <b>（3）板塊邊界三類的插圖（SVG）</b>，我也可以幫你把網站升級成更像作品集的版本。
+        若你之後要再加分：可以把你自己的 PyGMT 圖（輸出 PNG/PDF）放到一個 gallery 區塊，會非常像作品集。
       </div>
       <div style="opacity:.8;margin-top:10px">
         © <span id="year"></span> PyGMT mini-site · Made for clean maps & clean grades.
