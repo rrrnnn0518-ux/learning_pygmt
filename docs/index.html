@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PyGMT 快速入門｜把地球科學圖做得又快又美</title>
+  <meta name="description" content="用趣味方式介紹 PyGMT：它是什麼、能做什麼、如何安裝、常用範例與地球科學繪圖小技巧。">
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#111a33cc;
+      --card2:#0f1833aa;
+      --text:#e8ecff;
+      --muted:#b7c0ffcc;
+      --line:#223063;
+      --accent:#7c5cff;
+      --accent2:#34d399;
+      --warn:#fbbf24;
+      --danger:#fb7185;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% -10%, rgba(124,92,255,.35), transparent 60%),
+        radial-gradient(900px 600px at 90% 10%, rgba(52,211,153,.20), transparent 55%),
+        radial-gradient(900px 600px at 60% 105%, rgba(251,191,36,.15), transparent 55%),
+        linear-gradient(180deg, #070a14, #0b1020 45%, #070a14);
+      overflow-x:hidden;
+    }
+    a{color:inherit}
+    .container{max-width:1100px;margin:0 auto;padding:28px 18px 70px}
+    .nav{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(11,16,32,.85), rgba(11,16,32,.35));
+      border-bottom:1px solid rgba(34,48,99,.5);
+    }
+    .nav-inner{
+      max-width:1100px;margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 18px;
+      gap:14px;
+    }
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .logo{
+      width:40px;height:40px;border-radius:12px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%),
+        linear-gradient(135deg, rgba(124,92,255,1), rgba(52,211,153,1));
+      box-shadow: 0 12px 30px rgba(124,92,255,.25);
+      position:relative;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:8px;
+      border-radius:10px;
+      background: rgba(11,16,32,.55);
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .brand strong{font-size:14px;letter-spacing:.4px}
+    .brand span{display:block;font-size:12px;color:var(--muted)}
+    .nav-links{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+    .pill{
+      text-decoration:none;
+      padding:8px 10px;
+      border:1px solid rgba(34,48,99,.55);
+      border-radius:999px;
+      background: rgba(17,26,51,.35);
+      color: var(--muted);
+      font-size:12px;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+    .pill:hover{transform:translateY(-1px);background: rgba(17,26,51,.55);border-color: rgba(124,92,255,.65);color:var(--text)}
+    .hero{
+      padding:22px 0 10px;
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    @media (max-width: 880px){
+      .hero{grid-template-columns:1fr}
+      .nav-links{display:none}
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(17,26,51,.78), rgba(15,24,51,.55));
+      border:1px solid rgba(34,48,99,.6);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card-pad{padding:18px 18px 16px}
+    .h-title{
+      font-size:36px; line-height:1.08; margin:0 0 10px;
+      letter-spacing:-.6px;
+    }
+    .subtitle{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+    .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:12px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(34,48,99,.7);
+      background: rgba(11,16,32,.35);
+      color: var(--text);
+    }
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot.a{background:var(--accent)}
+    .dot.b{background:var(--accent2)}
+    .dot.c{background:var(--warn)}
+    .dot.d{background:var(--danger)}
+    .side{
+      display:flex;flex-direction:column;gap:12px;
+    }
+    .mini{
+      padding:14px 14px 12px;
+      border-radius: var(--radius);
+      border:1px solid rgba(34,48,99,.6);
+      background: rgba(17,26,51,.35);
+    }
+    .mini h3{margin:0 0 6px;font-size:14px}
+    .mini p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.6}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:14px;
+      margin-top:16px;
+    }
+    .col-7{grid-column: span 7}
+    .col-5{grid-column: span 5}
+    .col-6{grid-column: span 6}
+    .col-12{grid-column: span 12}
+    @media (max-width: 880px){
+      .col-7,.col-5,.col-6,.col-12{grid-column: span 12}
+    }
+    .section-title{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px 18px;
+      border-bottom:1px solid rgba(34,48,99,.6);
+      background: linear-gradient(90deg, rgba(124,92,255,.10), rgba(52,211,153,.05));
+    }
+    .section-title h2{
+      margin:0;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .section-title small{color:var(--muted)}
+    .content{padding:16px 18px 18px}
+    .content p{margin:0 0 12px;color:var(--muted);line-height:1.8;font-size:14px}
+    .content ul{margin:0 0 12px 18px;color:var(--muted);line-height:1.8;font-size:14px}
+    .kpi{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:14px;
+    }
+    @media (max-width: 880px){.kpi{grid-template-columns:1fr}}
+    .kpi .box{
+      padding:12px 12px 10px;
+      border-radius: 16px;
+      border:1px solid rgba(34,48,99,.6);
+      background: rgba(11,16,32,.30);
+    }
+    .kpi .box strong{display:block;font-size:13px;margin-bottom:6px}
+    .kpi .box span{color:var(--muted);font-size:12.5px;line-height:1.6}
+    pre, code{
+      font-family:var(--mono);
+      font-size:12.5px;
+    }
+    pre{
+      margin:12px 0 0;
+      padding:14px;
+      border-radius: 16px;
+      background: rgba(7,10,20,.75);
+      border:1px solid rgba(34,48,99,.75);
+      overflow:auto;
+    }
+    .codebar{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin-top:12px;
+    }
+    .btn{
+      cursor:pointer;
+      border:none;
+      padding:9px 10px;
+      border-radius:12px;
+      background: rgba(124,92,255,.18);
+      color: var(--text);
+      border:1px solid rgba(124,92,255,.35);
+      font-size:12px;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{transform:translateY(-1px); background: rgba(124,92,255,.26); border-color: rgba(124,92,255,.55)}
+    .btn.secondary{background: rgba(52,211,153,.14); border-color: rgba(52,211,153,.35)}
+    .btn.secondary:hover{background: rgba(52,211,153,.20); border-color: rgba(52,211,153,.55)}
+    .tabs{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 10px}
+    .tab{
+      padding:8px 10px;border-radius:999px;
+      border:1px solid rgba(34,48,99,.6);
+      background: rgba(11,16,32,.25);
+      color:var(--muted);
+      font-size:12px;
+      cursor:pointer;
+    }
+    .tab.active{background: rgba(124,92,255,.20); border-color: rgba(124,92,255,.55); color:var(--text)}
+    .callout{
+      margin-top:12px;
+      padding:12px 12px 10px;
+      border-radius: 16px;
+      border:1px dashed rgba(52,211,153,.55);
+      background: rgba(52,211,153,.08);
+      color: var(--text);
+      font-size:13px;
+      line-height:1.7;
+    }
+    .note{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(34,48,99,.6);
+      background: rgba(11,16,32,.25);
+      color: var(--muted);
+      font-size:12.5px;
+      line-height:1.7;
+    }
+    .quiz{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+    .q{
+      padding:12px 12px 10px;
+      border-radius:16px;
+      border:1px solid rgba(34,48,99,.6);
+      background: rgba(11,16,32,.25);
+    }
+    .q strong{display:block;font-size:13px;margin-bottom:8px}
+    .opt{display:flex;gap:10px;flex-wrap:wrap}
+    .opt button{
+      padding:8px 10px;border-radius:999px;
+      border:1px solid rgba(34,48,99,.6);
+      background: rgba(17,26,51,.35);
+      color: var(--muted);
+      cursor:pointer;font-size:12px;
+    }
+    .opt button:hover{border-color: rgba(124,92,255,.55); color: var(--text)}
+    .result{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(34,48,99,.6);
+      background: rgba(7,10,20,.55);
+      color: var(--muted);
+      font-size:12.5px;
+      line-height:1.7;
+      display:none;
+    }
+    footer{
+      margin-top:22px;
+      padding:16px 0 0;
+      color: var(--muted);
+      font-size:12px;
+      line-height:1.7;
+      opacity:.9;
+    }
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      background: rgba(17,26,51,.85);
+      border:1px solid rgba(34,48,99,.7);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      font-size:12.5px;
+      display:none;
+      z-index:50;
+      backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <strong>PyGMT 介紹小站</strong>
+          <span>讓地球科學繪圖變成一種快樂的儀式 ✨</span>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a class="pill" href="#what">它是什麼</a>
+        <a class="pill" href="#why">為什麼用</a>
+        <a class="pill" href="#install">安裝</a>
+        <a class="pill" href="#recipes">範例食譜</a>
+        <a class="pill" href="#tips">繪圖小技巧</a>
+        <a class="pill" href="#quiz">小測驗</a>
+      </div>
+    </div>
+  </div>
+
+  <main id="top" class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="card">
+        <div class="card-pad">
+          <h1 class="h-title">用 Python 畫出「像論文一樣」的地圖與剖面：<span style="color:var(--accent)">PyGMT</span></h1>
+          <p class="subtitle">
+            PyGMT 是 <b>GMT（Generic Mapping Tools）</b> 的 Python 介面。簡單說：你用 Python 寫幾行，就能產出
+            版面乾淨、線條銳利、標註一致、可重現（reproducible）的地球科學圖。
+          </p>
+          <div class="badges">
+            <span class="badge"><span class="dot a"></span> 地圖 / 地形 / 海深</span>
+            <span class="badge"><span class="dot b"></span> 震源分布 / 斷層 / 板塊邊界</span>
+            <span class="badge"><span class="dot c"></span> 剖面 / 走向剖面</span>
+            <span class="badge"><span class="dot d"></span> 論文等級排版</span>
+          </div>
+          <div class="kpi">
+            <div class="box">
+              <strong>一句話定位</strong>
+              <span>「用 Python 控制 GMT：把地科繪圖變成程式化流水線。」</span>
+            </div>
+            <div class="box">
+              <strong>很適合你用在</strong>
+              <span>板塊邊界、地震/火山、DEM、海洋地形、氣象/海氣資料可視化。</span>
+            </div>
+            <div class="box">
+              <strong>為什麼看起來很專業</strong>
+              <span>預設字體、刻度、投影、色階都偏向「出版級」習慣。</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="side">
+        <div class="mini">
+          <h3>🎛️ 你可以把它想像成…</h3>
+          <p>「Photoshop 的排版精準 + Python 的自動化」：一次寫好，之後資料更新只要重跑就能產新圖。</p>
+        </div>
+        <div class="mini">
+          <h3>🧪 最常見的開局</h3>
+          <p>先選投影與範圍 → 疊地形/海深 → 疊點線（地震、斷層、板塊）→ 加圖例/比例尺/指北針。</p>
+        </div>
+        <div class="mini">
+          <h3>🧯 小提醒（真實世界）</h3>
+          <p>資料格式很重要：GeoJSON / shapefile / 網格資料的欄位與幾何要正確，不然就會出現你看過的 warning。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT -->
+    <section id="what" class="grid">
+      <article class="card col-7">
+        <div class="section-title">
+          <h2>PyGMT 是什麼？</h2>
+          <small>概念 1 分鐘懂</small>
+        </div>
+        <div class="content">
+          <p>
+            <b>GMT</b> 是地球科學界很常用的繪圖工具（地圖、投影、地形、刻度、標註都很強），
+            <b>PyGMT</b> 則是讓你用 Python 去呼叫 GMT 的功能。
+          </p>
+          <ul>
+            <li><b>程式化繪圖：</b>把繪圖流程寫成程式，就能「可重現」。</li>
+            <li><b>出版級美感：</b>刻度、字體、線條、投影的細節控制很到位。</li>
+            <li><b>與科學資料搭配：</b>常和 xarray / numpy / pandas 搭配做資料處理，再用 PyGMT 出圖。</li>
+          </ul>
+          <div class="callout">
+            ✅ 如果你需要「每週更新一張圖」或「換資料就重出同風格圖」，PyGMT 會非常香。
+          </div>
+        </div>
+      </article>
+
+      <article id="why" class="card col-5">
+        <div class="section-title">
+          <h2>為什麼不用純 matplotlib？</h2>
+          <small>不是取代，是分工</small>
+        </div>
+        <div class="content">
+          <p>
+            matplotlib 很萬用，但在「地圖投影、地形渲染、刻度樣式一致性」這類地科細節上，GMT 的底子很強。
+          </p>
+          <ul>
+            <li><b>投影與刻度：</b>GMT 的投影與地圖框架是強項。</li>
+            <li><b>地形/海深：</b>現成色階、陰影（shading）處理很成熟。</li>
+            <li><b>排版：</b>多張子圖、圖例、比例尺、指北針都好控。</li>
+          </ul>
+          <div class="note">
+            小策略：<b>資料分析用 pandas/xarray</b>，<b>高品質地圖用 PyGMT</b>。
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- INSTALL -->
+    <section id="install" class="grid">
+      <article class="card col-12">
+        <div class="section-title">
+          <h2>安裝與環境建議</h2>
+          <small>避免踩雷版</small>
+        </div>
+        <div class="content">
+          <p>
+            最推薦用 <b>conda-forge</b> 安裝（因為 GMT 本身包含不少系統相依套件）。如果你用 pip，常見狀況是
+            「Python 裝好了，但 GMT 或系統 library 沒裝好」。
+          </p>
+
+          <div class="codebar">
+            <div class="tabs" role="tablist" aria-label="install tabs">
+              <button class="tab active" data-tab="conda">Conda（推薦）</button>
+              <button class="tab" data-tab="mamba">Mamba（更快）</button>
+              <button class="tab" data-tab="pip">pip（進階）</button>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn" data-copy="#code-install">複製安裝指令</button>
+              <button class="btn secondary" data-copy="#code-check">複製檢查指令</button>
+            </div>
+          </div>
+
+          <pre id="code-install" data-tabpanel="conda"><code>conda create -n pygmt -c conda-forge python=3.11 pygmt
+conda activate pygmt</code></pre>
+
+          <pre id="code-install-mamba" data-tabpanel="mamba" style="display:none"><code>conda install -n base -c conda-forge mamba
+mamba create -n pygmt -c conda-forge python=3.11 pygmt
+mamba activate pygmt</code></pre>
+
+          <pre id="code-install-pip" data-tabpanel="pip" style="display:none"><code># pip 版通常需要你先能在系統上用到 GMT
+# 例如：macOS 用 brew，Linux 用套件管理器，Windows 需確認 GMT 安裝與環境變數
+pip install pygmt</code></pre>
+
+          <pre id="code-check"><code>python -c "import pygmt; print('PyGMT OK ✅', pygmt.__version__)"
+gmt --version</code></pre>
+
+          <div class="note">
+            ✅ 想要最少麻煩：<b>Conda / Mamba 一次裝好 PyGMT + GMT</b>。<br/>
+            🧯 若你是在 Jupyter/Colab 類環境：要注意系統層的 GMT 是否真的可用。
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- RECIPES -->
+    <section id="recipes" class="grid">
+      <article class="card col-6">
+        <div class="section-title">
+          <h2>範例食譜 A：畫一張地形底圖 + 海岸線</h2>
+          <small>最經典的開場</small>
+        </div>
+        <div class="content">
+          <p>
+            這份範例做的事：設定範圍與投影 → 疊地形（含陰影）→ 疊海岸線 → 加色階。
+          </p>
+          <div class="codebar">
+            <button class="btn" data-copy="#code-a">複製程式碼</button>
+          </div>
+          <pre id="code-a"><code>import pygmt
+
+region = [119, 123, 21.5, 25.5]  # 台灣附近範圍（示意）
+fig = pygmt.Figure()
+
+# 地形網格（示意：使用 GMT 內建資料時需可用的環境）
+grid = pygmt.datasets.load_earth_relief(resolution="15s", region=region)
+shade = pygmt.grdgradient(grid=grid, azimuth=315, normalization="t1")
+
+fig.grdimage(
+    grid=grid,
+    region=region,
+    projection="M15c",
+    shading=shade,
+    cmap="geo",
+    frame=["af", "+tPyGMT 地形底圖示例"]
+)
+
+fig.coast(shorelines="1/0.5p,white", borders="1/0.5p,white", water="navy@15")
+fig.colorbar(frame='af+l"Elevation (m)"')
+
+fig.show()</code></pre>
+          <div class="note">
+            小技巧：<code>grdgradient</code> 做陰影後，地形立體感會直接升級。
+          </div>
+        </div>
+      </article>
+
+      <article class="card col-6">
+        <div class="section-title">
+          <h2>範例食譜 B：疊加地震點（大小=規模）</h2>
+          <small>研究圖常用套路</small>
+        </div>
+        <div class="content">
+          <p>
+            你可以用 pandas 讀表，再把經緯度與規模映射到點的大小/顏色。下面用「假資料」示意。
+          </p>
+          <div class="codebar">
+            <button class="btn" data-copy="#code-b">複製程式碼</button>
+          </div>
+          <pre id="code-b"><code>import pandas as pd
+import pygmt
+
+# 假資料：lon, lat, mag
+df = pd.DataFrame({
+    "lon": [121.5, 121.0, 120.8, 122.0],
+    "lat": [24.0, 23.6, 22.9, 24.8],
+    "mag": [4.2, 5.1, 4.6, 6.0]
+})
+
+region = [119, 123, 21.5, 25.5]
+fig = pygmt.Figure()
+fig.basemap(region=region, projection="M15c", frame=["af", "+t地震點疊圖（示意）"])
+fig.coast(land="gray20", water="gray10", shorelines="1/0.4p,white")
+
+# 點大小跟 mag 有關（示意比例）
+sizes = 0.08 + 0.08 * (df["mag"] - df["mag"].min())
+
+fig.plot(
+    x=df["lon"],
+    y=df["lat"],
+    style="c",     # circle
+    size=sizes,
+    fill="tomato",
+    pen="0.3p,white",
+    transparency=15
+)
+
+fig.show()</code></pre>
+          <div class="note">
+            想做得更像論文：加上圖例（legend）、規模分級（bins）、或用顏色代表深度。
+          </div>
+        </div>
+      </article>
+
+      <article class="card col-12">
+        <div class="section-title">
+          <h2>範例食譜 C：板塊邊界與地形景觀（概念版）</h2>
+          <small>把「地科故事」畫出來</small>
+        </div>
+        <div class="content">
+          <p>
+            板塊邊界常見三大類：<b>聚合（隱沒/碰撞）</b>、<b>張裂（離散）</b>、<b>轉形（走滑）</b>。它們對應的典型地形景觀也很有辨識度：
+          </p>
+          <ul>
+            <li><b>聚合邊界：</b>海溝、島弧火山、造山帶、增積楔（例如日本海溝—日本島弧）。</li>
+            <li><b>張裂邊界：</b>洋中脊、裂谷、玄武岩質噴發與新生海洋地殼（例如大西洋中洋脊）。</li>
+            <li><b>轉形邊界：</b>線性谷地、斷層地形、地震頻繁但火山不一定常見（例如聖安德烈斯斷層）。</li>
+          </ul>
+          <div class="callout">
+            🎯 小挑戰：下次看到一張海深/地形圖，先找「海溝」或「洋中脊」的形狀，你會很快開始「用地形猜板塊」。
+          </div>
+          <div class="note">
+            若你要把「板塊邊界線資料」疊上去：請先確定 GeoJSON / Shapefile 的幾何與欄位正常（例如 LineString、座標順序、是否含空幾何），避免出現欄位數不符的 warning。
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- TIPS -->
+    <section id="tips" class="grid">
+      <article class="card col-7">
+        <div class="section-title">
+          <h2>繪圖小技巧（讓圖瞬間高級）</h2>
+          <small>實用清單</small>
+        </div>
+        <div class="content">
+          <ul>
+            <li><b>陰影（shading）</b>：地形一定要試 <code>grdgradient</code>，立體感差很多。</li>
+            <li><b>色階（cmap）</b>：地形用 <code>geo</code>、海深可用 <code>deep</code> 類型色階（視情境）。</li>
+            <li><b>框線與刻度一致</b>：<code>frame=["af", "+tTitle"]</code> 先固定風格，所有圖都用同一套。</li>
+            <li><b>圖例與標註</b>：研究圖的「可讀性」很多時候是圖例與標註決勝負。</li>
+            <li><b>可重現</b>：把 region、projection、cmap、字體參數集中在一段「設定區」。</li>
+          </ul>
+          <div class="note">
+            進階：你可以把「出圖流程」包成函式，做成自己的小型繪圖框架（例如：地形底圖函式、事件疊點函式、圖例函式）。
+          </div>
+        </div>
+      </article>
+
+      <article class="card col-5">
+        <div class="section-title">
+          <h2>你可能會遇到的坑</h2>
+          <small>先知道先贏</small>
+        </div>
+        <div class="content">
+          <ul>
+            <li><b>環境相依</b>：建議 conda-forge 一套裝好。</li>
+            <li><b>資料格式</b>：GeoJSON 欄位/幾何不乾淨會噴 warning。</li>
+            <li><b>投影與範圍</b>：region 設太大或解析度太高，會慢到懷疑人生。</li>
+            <li><b>透明度與層次</b>：先鋪底圖，再疊線、最後疊點與文字。</li>
+          </ul>
+          <div class="callout">
+            ✅ 心法：先把「底圖」做漂亮，再把「資料」疊得清楚。
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quiz" class="grid">
+      <article class="card col-12">
+        <div class="section-title">
+          <h2>30 秒小測驗：你已經懂 PyGMT 了嗎？</h2>
+          <small>答對會給你一個小彩蛋</small>
+        </div>
+        <div class="content">
+          <p>選一個答案，看看你的直覺是否跟地科繪圖老手一致：</p>
+
+          <div class="quiz">
+            <div class="q" data-q="1">
+              <strong>Q1：PyGMT 最大的核心價值是？</strong>
+              <div class="opt">
+                <button data-a="A">A. 可以玩遊戲</button>
+                <button data-a="B">B. 用 Python 做出版級地圖繪圖</button>
+                <button data-a="C">C. 取代所有資料分析工具</button>
+              </div>
+              <div class="result"></div>
+            </div>
+
+            <div class="q" data-q="2">
+              <strong>Q2：想讓地形看起來更立體，最常加什麼？</strong>
+              <div class="opt">
+                <button data-a="A">A. 陰影（shading / grdgradient）</button>
+                <button data-a="B">B. 把字體改成粉紅色</button>
+                <button data-a="C">C. 把海岸線關掉</button>
+              </div>
+              <div class="result"></div>
+            </div>
+          </div>
+
+          <div class="note" id="easter" style="display:none">
+            🎉 彩蛋：你已解鎖「地科繪圖咒語」——<b>先底圖、再資料、最後標註與圖例</b>。<br/>
+            這句話能救你很多張圖（真的）。
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      <div class="note">
+        你可以直接把這個檔案存成 <b>index.html</b> 打開就能看。<br/>
+        如果你希望我再加上：<b>（1）你的 repository 連結按鈕</b>、<b>（2）你的實際 PyGMT 程式碼區塊</b>、
+        <b>（3）板塊邊界三類的插圖（SVG）</b>，我也可以幫你把網站升級成更像作品集的版本。
+      </div>
+      <div style="opacity:.8;margin-top:10px">
+        © <span id="year"></span> PyGMT mini-site · Made for clean maps & clean grades.
+      </div>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Tabs (Install)
+    const tabs = document.querySelectorAll(".tab");
+    const codeConda = document.getElementById("code-install");
+    const codeMamba = document.getElementById("code-install-mamba");
+    const codePip = document.getElementById("code-install-pip");
+    function showInstall(which){
+      codeConda.style.display = (which==="conda") ? "block" : "none";
+      codeMamba.style.display = (which==="mamba") ? "block" : "none";
+      codePip.style.display   = (which==="pip")   ? "block" : "none";
+    }
+    tabs.forEach(t=>{
+      t.addEventListener("click", ()=>{
+        tabs.forEach(x=>x.classList.remove("active"));
+        t.classList.add("active");
+        showInstall(t.dataset.tab);
+      });
+    });
+
+    // Copy buttons
+    const toast = document.getElementById("toast");
+    let toastTimer = null;
+
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.style.display = "block";
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=>toast.style.display="none", 1700);
+    }
+
+    async function copyText(selector){
+      const el = document.querySelector(selector);
+      if(!el) return;
+      const text = el.innerText.trim();
+      try{
+        await navigator.clipboard.writeText(text);
+        showToast("已複製到剪貼簿 ✅");
+      }catch(e){
+        // Fallback
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        showToast("已複製到剪貼簿 ✅（fallback）");
+      }
+    }
+
+    document.querySelectorAll("[data-copy]").forEach(btn=>{
+      btn.addEventListener("click", ()=>copyText(btn.getAttribute("data-copy")));
+    });
+
+    // Quiz
+    const answer = {
+      1: {correct:"B", msg:"✅ 沒錯！PyGMT 的靈魂就是：用 Python 做出版級地圖繪圖與流程自動化。"},
+      2: {correct:"A", msg:"✅ 正解！陰影（shading）一加，地形立體感直接翻倍。"}
+    };
+    const easter = document.getElementById("easter");
+    const state = {1:false,2:false};
+
+    document.querySelectorAll(".q").forEach(block=>{
+      const qid = block.getAttribute("data-q");
+      const res = block.querySelector(".result");
+      block.querySelectorAll("button").forEach(b=>{
+        b.addEventListener("click", ()=>{
+          const pick = b.getAttribute("data-a");
+          res.style.display = "block";
+          if(pick === answer[qid].correct){
+            res.textContent = answer[qid].msg;
+            res.style.borderColor = "rgba(52,211,153,.55)";
+            res.style.background = "rgba(52,211,153,.08)";
+            state[qid] = true;
+          }else{
+            res.textContent = "❌ 再想一下：提示是「地科出圖」的核心需求。";
+            res.style.borderColor = "rgba(251,113,133,.55)";
+            res.style.background = "rgba(251,113,133,.08)";
+            state[qid] = false;
+          }
+          if(state[1] && state[2]) easter.style.display = "block";
+        });
+      });
+    });
+  </script>
+</body>
+</html>
