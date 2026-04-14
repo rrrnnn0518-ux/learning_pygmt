@@ -1,881 +1,557 @@
-<!doctype html>
-<html lang="zh-Hant">
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PyGMT 快速入門｜把地球科學圖做得又快又美</title>
-  <meta name="description" content="用趣味方式介紹 PyGMT：它是什麼、能做什麼、如何安裝、常用範例與地球科學繪圖小技巧，並收錄 ROSES Unit 8 PyGMT 影片精華與官方 Overview。">
-  <style>
-    :root{
-      --bg:#0b1020;
-      --card:#111a33cc;
-      --card2:#0f1833aa;
-      --text:#e8ecff;
-      --muted:#b7c0ffcc;
-      --line:#223063;
-      --accent:#7c5cff;
-      --accent2:#34d399;
-      --warn:#fbbf24;
-      --danger:#fb7185;
-      --shadow: 0 18px 60px rgba(0,0,0,.45);
-      --radius: 18px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:var(--sans);
-      color:var(--text);
-      background:
-        radial-gradient(1200px 700px at 15% -10%, rgba(124,92,255,.35), transparent 60%),
-        radial-gradient(900px 600px at 90% 10%, rgba(52,211,153,.20), transparent 55%),
-        radial-gradient(900px 600px at 60% 105%, rgba(251,191,36,.15), transparent 55%),
-        linear-gradient(180deg, #070a14, #0b1020 45%, #070a14);
-      overflow-x:hidden;
-    }
-    a{color:inherit}
-    .container{max-width:1100px;margin:0 auto;padding:28px 18px 70px}
-    .nav{
-      position:sticky; top:0; z-index:20;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(180deg, rgba(11,16,32,.85), rgba(11,16,32,.35));
-      border-bottom:1px solid rgba(34,48,99,.5);
-    }
-    .nav-inner{
-      max-width:1100px;margin:0 auto;
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 18px;
-      gap:14px;
-    }
-    .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-    .logo{
-      width:40px;height:40px;border-radius:12px;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%),
-        linear-gradient(135deg, rgba(124,92,255,1), rgba(52,211,153,1));
-      box-shadow: 0 12px 30px rgba(124,92,255,.25);
-      position:relative;
-    }
-    .logo:after{
-      content:"";
-      position:absolute; inset:8px;
-      border-radius:10px;
-      background: rgba(11,16,32,.55);
-      border:1px solid rgba(255,255,255,.18);
-    }
-    .brand strong{font-size:14px;letter-spacing:.4px}
-    .brand span{display:block;font-size:12px;color:var(--muted)}
-    .nav-links{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
-    .pill{
-      text-decoration:none;
-      padding:8px 10px;
-      border:1px solid rgba(34,48,99,.55);
-      border-radius:999px;
-      background: rgba(17,26,51,.35);
-      color: var(--muted);
-      font-size:12px;
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
-    }
-    .pill:hover{transform:translateY(-1px);background: rgba(17,26,51,.55);border-color: rgba(124,92,255,.65);color:var(--text)}
-    .hero{
-      padding:22px 0 10px;
-      display:grid;
-      grid-template-columns: 1.25fr .75fr;
-      gap:18px;
-      align-items:stretch;
-    }
-    @media (max-width: 880px){
-      .hero{grid-template-columns:1fr}
-      .nav-links{display:none}
-    }
-    .card{
-      background: linear-gradient(180deg, rgba(17,26,51,.78), rgba(15,24,51,.55));
-      border:1px solid rgba(34,48,99,.6);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .card-pad{padding:18px 18px 16px}
-    .h-title{
-      font-size:36px; line-height:1.08; margin:0 0 10px;
-      letter-spacing:-.6px;
-    }
-    .subtitle{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.7;
-    }
-    .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-    .badge{
-      display:inline-flex;align-items:center;gap:8px;
-      font-size:12px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(34,48,99,.7);
-      background: rgba(11,16,32,.35);
-      color: var(--text);
-    }
-    .dot{width:10px;height:10px;border-radius:50%}
-    .dot.a{background:var(--accent)}
-    .dot.b{background:var(--accent2)}
-    .dot.c{background:var(--warn)}
-    .dot.d{background:var(--danger)}
-    .side{
-      display:flex;flex-direction:column;gap:12px;
-    }
-    .mini{
-      padding:14px 14px 12px;
-      border-radius: var(--radius);
-      border:1px solid rgba(34,48,99,.6);
-      background: rgba(17,26,51,.35);
-    }
-    .mini h3{margin:0 0 6px;font-size:14px}
-    .mini p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.6}
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap:14px;
-      margin-top:16px;
-    }
-    .col-7{grid-column: span 7}
-    .col-5{grid-column: span 5}
-    .col-6{grid-column: span 6}
-    .col-12{grid-column: span 12}
-    @media (max-width: 880px){
-      .col-7,.col-5,.col-6,.col-12{grid-column: span 12}
-    }
-    .section-title{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      padding:14px 18px;
-      border-bottom:1px solid rgba(34,48,99,.6);
-      background: linear-gradient(90deg, rgba(124,92,255,.10), rgba(52,211,153,.05));
-    }
-    .section-title h2{
-      margin:0;
-      font-size:16px;
-      letter-spacing:.2px;
-    }
-    .section-title small{color:var(--muted)}
-    .content{padding:16px 18px 18px}
-    .content p{margin:0 0 12px;color:var(--muted);line-height:1.8;font-size:14px}
-    .content ul{margin:0 0 12px 18px;color:var(--muted);line-height:1.8;font-size:14px}
-    .kpi{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:12px;
-      margin-top:14px;
-    }
-    @media (max-width: 880px){.kpi{grid-template-columns:1fr}}
-    .kpi .box{
-      padding:12px 12px 10px;
-      border-radius: 16px;
-      border:1px solid rgba(34,48,99,.6);
-      background: rgba(11,16,32,.30);
-    }
-    .kpi .box strong{display:block;font-size:13px;margin-bottom:6px}
-    .kpi .box span{color:var(--muted);font-size:12.5px;line-height:1.6}
-    pre, code{
-      font-family:var(--mono);
-      font-size:12.5px;
-    }
-    pre{
-      margin:12px 0 0;
-      padding:14px;
-      border-radius: 16px;
-      background: rgba(7,10,20,.75);
-      border:1px solid rgba(34,48,99,.75);
-      overflow:auto;
-    }
-    .codebar{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      margin-top:12px;
-    }
-    .btn{
-      cursor:pointer;
-      border:none;
-      padding:9px 10px;
-      border-radius:12px;
-      background: rgba(124,92,255,.18);
-      color: var(--text);
-      border:1px solid rgba(124,92,255,.35);
-      font-size:12px;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-      white-space:nowrap;
-    }
-    .btn:hover{transform:translateY(-1px); background: rgba(124,92,255,.26); border-color: rgba(124,92,255,.55)}
-    .btn.secondary{background: rgba(52,211,153,.14); border-color: rgba(52,211,153,.35)}
-    .btn.secondary:hover{background: rgba(52,211,153,.20); border-color: rgba(52,211,153,.55)}
-    .tabs{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 10px}
-    .tab{
-      padding:8px 10px;border-radius:999px;
-      border:1px solid rgba(34,48,99,.6);
-      background: rgba(11,16,32,.25);
-      color:var(--muted);
-      font-size:12px;
-      cursor:pointer;
-    }
-    .tab.active{background: rgba(124,92,255,.20); border-color: rgba(124,92,255,.55); color:var(--text)}
-    .callout{
-      margin-top:12px;
-      padding:12px 12px 10px;
-      border-radius: 16px;
-      border:1px dashed rgba(52,211,153,.55);
-      background: rgba(52,211,153,.08);
-      color: var(--text);
-      font-size:13px;
-      line-height:1.7;
-    }
-    .note{
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius: 16px;
-      border:1px solid rgba(34,48,99,.6);
-      background: rgba(11,16,32,.25);
-      color: var(--muted);
-      font-size:12.5px;
-      line-height:1.7;
-    }
-    .quiz{
-      display:grid;
-      gap:10px;
-      margin-top:12px;
-    }
-    .q{
-      padding:12px 12px 10px;
-      border-radius:16px;
-      border:1px solid rgba(34,48,99,.6);
-      background: rgba(11,16,32,.25);
-    }
-    .q strong{display:block;font-size:13px;margin-bottom:8px}
-    .opt{display:flex;gap:10px;flex-wrap:wrap}
-    .opt button{
-      padding:8px 10px;border-radius:999px;
-      border:1px solid rgba(34,48,99,.6);
-      background: rgba(17,26,51,.35);
-      color: var(--muted);
-      cursor:pointer;font-size:12px;
-    }
-    .opt button:hover{border-color: rgba(124,92,255,.55); color: var(--text)}
-    .result{
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius: 14px;
-      border:1px solid rgba(34,48,99,.6);
-      background: rgba(7,10,20,.55);
-      color: var (--muted);
-      font-size:12.5px;
-      line-height:1.7;
-      display:none;
-    }
-    footer{
-      margin-top:22px;
-      padding:16px 0 0;
-      color: var(--muted);
-      font-size:12px;
-      line-height:1.7;
-      opacity:.9;
-    }
-    .toast{
-      position:fixed;
-      left:50%;
-      bottom:18px;
-      transform:translateX(-50%);
-      background: rgba(17,26,51,.85);
-      border:1px solid rgba(34,48,99,.7);
-      color: var(--text);
-      padding:10px 12px;
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      font-size:12.5px;
-      display:none;
-      z-index:50;
-      backdrop-filter: blur(10px);
-    }
-
-    /* Video */
-    .video-wrap{
-      border-radius: 18px;
-      overflow:hidden;
-      border:1px solid rgba(34,48,99,.75);
-      background: rgba(7,10,20,.55);
-    }
-    .video{
-      width:100%;
-      aspect-ratio: 16 / 9;
-      border:0;
-      display:block;
-    }
-    .links{
-      display:flex;flex-wrap:wrap;gap:10px;margin-top:10px
-    }
-    .linkbtn{
-      text-decoration:none;
-      padding:9px 10px;
-      border-radius:12px;
-      border:1px solid rgba(34,48,99,.65);
-      background: rgba(17,26,51,.35);
-      color: var(--text);
-      font-size:12px;
-    }
-    .linkbtn:hover{border-color: rgba(124,92,255,.55)}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震學第一章介紹 | 互動科學教學</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Chart.js 用於圖表繪製 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入 Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        /* 隱藏滾動條但保持可滾動 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .placeholder-img { display: flex; align-items: center; justify-content: center; background: #334155; border: 2px dashed #64748b; border-radius: 0.5rem; overflow: hidden; position: relative; }
+        .placeholder-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; transition: opacity 0.3s; }
+        .placeholder-img:hover img { opacity: 0.8; }
+        .placeholder-text { position: absolute; text-align: center; color: #cbd5e1; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8); z-index: 10; pointer-events: none;}
+        
+        /* 建築物共振動畫設定 */
+        .building { transform-origin: bottom center; transition: transform 0.1s; }
+        @keyframes shake-intense { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 50% { transform: rotate(0deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
+        .resonating { animation: shake-intense 0.1s infinite; border-color: #ef4444 !important; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
+    </style>
 </head>
+<body class="antialiased selection:bg-blue-500 selection:text-white">
 
-<body>
-  <div class="nav">
-    <div class="nav-inner">
-      <a class="brand" href="#top">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <strong>PyGMT 介紹小站</strong>
-          <span>讓地球科學繪圖變成一種快樂的儀式 ✨</span>
-        </div>
-      </a>
-      <div class="nav-links">
-        <a class="pill" href="#what">它是什麼</a>
-        <a class="pill" href="#why">為什麼用</a>
-        <a class="pill" href="#video">影片精華</a>
-        <a class="pill" href="#official">官方 Overview</a>
-        <a class="pill" href="#install">安裝</a>
-        <a class="pill" href="#recipes">範例食譜</a>
-        <a class="pill" href="#tips">繪圖小技巧</a>
-        <a class="pill" href="#quiz">小測驗</a>
-      </div>
-    </div>
-  </div>
-
-  <main id="top" class="container">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="card">
-        <div class="card-pad">
-          <h1 class="h-title">用 Python 畫出「像論文一樣」的地圖與剖面：<span style="color:var(--accent)">PyGMT</span></h1>
-          <p class="subtitle">
-            PyGMT 是 <b>GMT（Generic Mapping Tools）</b> 的 Python 介面。簡單說：你用 Python 寫幾行，就能產出
-            版面乾淨、線條銳利、標註一致、可重現（reproducible）的地球科學圖。
-          </p>
-          <div class="badges">
-            <span class="badge"><span class="dot a"></span> 地圖 / 地形 / 海深</span>
-            <span class="badge"><span class="dot b"></span> 震源分布 / 斷層 / 板塊邊界</span>
-            <span class="badge"><span class="dot c"></span> 剖面 / 走向剖面</span>
-            <span class="badge"><span class="dot d"></span> 論文等級排版</span>
-          </div>
-          <div class="kpi">
-            <div class="box">
-              <strong>一句話定位</strong>
-              <span>「用 Python 控制 GMT：把地科繪圖變成程式化流水線。」</span>
+    <!-- 導覽列 -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <span class="text-xl font-bold text-blue-400">Seismology <span class="text-white">Ch1</span></span>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4 text-sm font-medium">
+                        <a href="#scope" class="hover:text-blue-400 transition">研究範疇</a>
+                        <a href="#figures-1" class="hover:text-blue-400 transition">觀測原理</a>
+                        <a href="#hazard-risk" class="hover:text-blue-400 transition">危害與風險</a>
+                        <a href="#attenuation" class="hover:text-blue-400 transition">波能量衰減</a>
+                        <a href="#resonance" class="hover:text-blue-400 transition">建築與共振</a>
+                        <a href="#liquefaction" class="hover:text-blue-400 transition">土壤液化</a>
+                        <a href="#forecast" class="hover:text-blue-400 transition">預報與預測</a>
+                        <a href="#nuclear" class="hover:text-blue-400 transition">核爆監測</a>
+                    </div>
+                </div>
             </div>
-            <div class="box">
-              <strong>很適合你用在</strong>
-              <span>板塊邊界、地震/火山、DEM、海洋地形、氣象/海氣資料可視化。</span>
+        </div>
+    </nav>
+
+    <!-- 頁首標題 -->
+    <header class="pt-32 pb-20 px-4 text-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-[#0f172a] z-0"></div>
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <h1 class="text-5xl md:text-7xl font-black tracking-tight mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">地震學第一章介紹</h1>
+            <p class="text-xl text-slate-300 leading-relaxed">深入地底的科學：從觀測原理、風險評估到核爆監測的全面解析</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32 pb-32">
+
+        <!-- 區塊 1：地震學研究範疇 -->
+        <section id="scope" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold border-l-4 border-blue-500 pl-4 mb-8">1. 地震學研究範疇</h2>
+            <div class="glass-panel p-8 rounded-2xl leading-relaxed text-slate-300 space-y-4">
+                <p>地震學研究中最核心的三個元素為：<strong class="text-blue-300">震源 (Source)</strong>、<strong class="text-blue-300">介質 (Medium)</strong> 與 <strong class="text-blue-300">接收器 (Receiver)</strong>。我們可以將其視為一個訊號傳輸的過程。當震波進入地球內部（Medium）時，地球內部的岩石層位、密度變化及不連續面，會像濾鏡一樣改變震波。</p>
+                <p>地震學家的工作重點，便是透過研究觀測站接收到的複雜且凌亂的地震圖，反推地底下的介質藏了什麼秘密，以及震源當初是如何破裂的。這就像是利用地震波為地球做「電腦斷層掃描」，讓我們不必鑽入地底，就能推測內部的結構與組成。</p>
             </div>
-            <div class="box">
-              <strong>為什麼看起來很專業</strong>
-              <span>預設字體、刻度、線條、投影的細節控制偏向「出版級」習慣。</span>
+        </section>
+
+        <!-- 區塊 2：圖 1.1-1 至 1.1-5 說明 -->
+        <section id="figures-1" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold border-l-4 border-cyan-500 pl-4 mb-8">2. 地震波的傳遞與觀測原理</h2>
+            
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-12">
+                <!-- 圖 1.1-1 -->
+                <div class="space-y-4">
+                    <div class="placeholder-img h-64 w-full">
+                        <img src="fig1.1-1.jpg" alt="地震觀測實驗的幾何架構">
+                        <div class="placeholder-text">圖 1.1-1 圖片佔位符<br><span class="text-sm font-normal">fig1.1-1.jpg</span></div>
+                    </div>
+                    <h3 class="text-xl font-bold text-cyan-400">圖 1.1-1：地震觀測實驗的幾何架構</h3>
+                    <ul class="list-disc pl-5 text-slate-300 space-y-2 text-sm">
+                        <li><strong>震源與原始脈衝：</strong>星號代表能量釋放起點，定義了 Origin time (發震時間)。原始脈衝通常簡單且集中。</li>
+                        <li><strong>介質與傳遞過程：</strong>震波在介質中行進所花費的時間稱為 Travel time (走時)。</li>
+                        <li><strong>接收器與地震圖：</strong>在 Arrival time (抵達時間) 捕捉到震波。原始脈衝非常乾淨，但記錄到的地震圖極其複雜凌亂。</li>
+                    </ul>
+                </div>
+
+                <!-- 圖 1.1-2 -->
+                <div class="space-y-4">
+                    <div class="placeholder-img h-64 w-full">
+                        <img src="fig1.1-2.jpg" alt="地球內部的地震波線路徑">
+                        <div class="placeholder-text">圖 1.1-2 圖片佔位符<br><span class="text-sm font-normal">fig1.1-2.jpg</span></div>
+                    </div>
+                    <h3 class="text-xl font-bold text-cyan-400">圖 1.1-2：地球內部的地震波線路徑</h3>
+                    <ul class="list-disc pl-5 text-slate-300 space-y-2 text-sm">
+                        <li><strong>速度隨深度增加：</strong>由於壓力增加，岩石變緻密，地震波傳播速度隨深度加快，導致波線「彎曲」。</li>
+                        <li><strong>折射現象 (Refraction)：</strong>依據司乃耳定律，波進入高速介質向外偏折，最終回到地面。</li>
+                    </ul>
+                </div>
+
+                <!-- 圖 1.1-3 -->
+                <div class="space-y-4">
+                    <div class="placeholder-img h-64 w-full">
+                        <img src="fig1.1-3.jpg" alt="地震震相與路徑對照">
+                        <div class="placeholder-text">圖 1.1-3 圖片佔位符<br><span class="text-sm font-normal">fig1.1-3.jpg</span></div>
+                    </div>
+                    <h3 class="text-xl font-bold text-cyan-400">圖 1.1-3：地震震相 (Seismic Phases) 與路徑對照</h3>
+                    <ul class="list-disc pl-5 text-slate-300 space-y-2 text-sm">
+                        <li><strong>直接波 (P 與 S)：</strong>最短路徑穿過地函。P 波最快。</li>
+                        <li><strong>地表反射波 (pP, sP, PP)：</strong>抵達前先在地表反射。可精確判斷地震深度。</li>
+                        <li><strong>核幔邊界反射波 (ScS, PcS)：</strong>撞擊地核邊界彈回。</li>
+                        <li><strong>Rayleigh 波：</strong>圖末端振幅最大，走最慢但攜帶能量最強，是破壞主因。</li>
+                    </ul>
+                </div>
+
+                <!-- 圖 1.1-4 -->
+                <div class="space-y-4">
+                    <div class="placeholder-img h-64 w-full">
+                        <img src="fig1.1-4.jpg" alt="深源地震與多次核幔邊界反射波">
+                        <div class="placeholder-text">圖 1.1-4 圖片佔位符<br><span class="text-sm font-normal">fig1.1-4.jpg</span></div>
+                    </div>
+                    <h3 class="text-xl font-bold text-cyan-400">圖 1.1-4：深源地震與多次核幔邊界反射波</h3>
+                    <ul class="list-disc pl-5 text-slate-300 space-y-2 text-sm">
+                        <li><strong>深源地震：</strong>深度相與直接波時間差明顯，地震圖非常乾淨清晰。</li>
+                        <li><strong>ScS 波：</strong>地震波撞到核幔邊界 (CMB) 彈回的「回聲」。</li>
+                        <li><strong>多次反射：</strong>記錄到 ScS2, ScS3, ScS4，反射次數增加抵達時間越晚，能量衰減。證實核幔邊界存在。</li>
+                    </ul>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="side">
-        <div class="mini">
-          <h3>🎛️ 你可以把它想像成…</h3>
-          <p>「Photoshop 的排版精準 + Python 的自動化」：一次寫好，之後資料更新只要重跑就能產新圖。</p>
-        </div>
-        <div class="mini">
-          <h3>🧪 最常見的開局</h3>
-          <p>先選投影與範圍 → 疊地形/海深 → 疊點線（地震、斷層、板塊）→ 加圖例/比例尺/指北針。</p>
-        </div>
-        <div class="mini">
-          <h3>🧯 小提醒（真實世界）</h3>
-          <p>資料格式很重要：GeoJSON / shapefile / 網格資料的欄位與幾何要正確，不然就會噴 warning。</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- WHAT -->
-    <section id="what" class="grid">
-      <article class="card col-7">
-        <div class="section-title">
-          <h2>PyGMT 是什麼？</h2>
-          <small>概念 1 分鐘懂</small>
-        </div>
-        <div class="content">
-          <p>
-            <b>GMT</b> 是地球科學界很常用的繪圖工具（地圖、投影、地形、刻度、標註都很強），
-            <b>PyGMT</b> 則是讓你用 Python 去呼叫 GMT 的功能。
-          </p>
-          <ul>
-            <li><b>程式化繪圖：</b>把繪圖流程寫成程式，就能「可重現」。</li>
-            <li><b>出版級美感：</b>刻度、字體、線條、投影的細節控制很到位。</li>
-            <li><b>與科學資料搭配：</b>常和 xarray / numpy / pandas 搭配做資料處理，再用 PyGMT 出圖。</li>
-          </ul>
-          <div class="callout">
-            ✅ 如果你需要「每週更新一張圖」或「換資料就重出同風格圖」，PyGMT 會非常香。
-          </div>
-        </div>
-      </article>
-
-      <article id="why" class="card col-5">
-        <div class="section-title">
-          <h2>為什麼不用純 matplotlib？</h2>
-          <small>不是取代，是分工</small>
-        </div>
-        <div class="content">
-          <p>
-            matplotlib 很萬用，但在「地圖投影、地形渲染、刻度樣式一致性」這類地科細節上，GMT 的底子很強。
-          </p>
-          <ul>
-            <li><b>投影與刻度：</b>GMT 的投影與地圖框架是強項。</li>
-            <li><b>地形/海深：</b>現成色階、陰影（shading）處理很成熟。</li>
-            <li><b>排版：</b>多張子圖、圖例、比例尺、指北針都好控。</li>
-          </ul>
-          <div class="note">
-            小策略：<b>資料分析用 pandas/xarray</b>，<b>高品質地圖用 PyGMT</b>。
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <!-- VIDEO -->
-    <section id="video" class="grid">
-      <article class="card col-12">
-        <div class="section-title">
-          <h2>影片精華：ROSES Unit 8 – PyGMT（從 191 秒開始）</h2>
-          <small>直接嵌入到你的網站</small>
-        </div>
-        <div class="content">
-          <div class="video-wrap">
-            <iframe
-              class="video"
-              src="https://www.youtube-nocookie.com/embed/SSIGJEe0BIk?start=191&rel=0"
-              title="ROSES Unit 8 - PyGMT"
-              loading="lazy"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
-          </div>
-
-          <div class="links">
-            <a class="linkbtn" href="https://www.youtube.com/watch?v=SSIGJEe0BIk&t=191s" target="_blank" rel="noopener">在 YouTube 開啟（191s）</a>
-            <a class="linkbtn" href="https://www.pygmt.org/latest/overview.html" target="_blank" rel="noopener">官方 Overview（latest）</a>
-            <a class="linkbtn" href="https://www.pygmt.org/" target="_blank" rel="noopener">PyGMT 官網</a>
-          </div>
-
-          <p style="margin-top:12px">
-            這段教學（191s 以後）很適合拿來寫作業的「學習重點」：它走的是典型的研究出圖流程。
-          </p>
-
-          <ul>
-            <li><b>安裝與環境：</b>強烈建議 conda-forge；避免系統相依套件地雷。</li>
-            <li><b>地圖三要素：</b><code>region</code>（範圍）、<code>projection</code>（投影）、<code>frame</code>（框線/刻度/標題）。</li>
-            <li><b>疊圖觀念：</b>先底圖（海岸線/地形）→ 再疊資料（點、線）→ 最後加圖例與標註。</li>
-            <li><b>格網資料：</b>地形/海深用 <code>grdimage</code> 顯示，搭配 shading 增強立體感。</li>
-            <li><b>符號與圖例：</b>點的大小/顏色不是裝飾，是「資料語言」，legend 讓讀者不用猜。</li>
-          </ul>
-
-          <div class="note">
-            想把影片做成「時間戳筆記版」：你把字幕或筆記貼我，我可以幫你做成「時間戳 → 重點 → 對應 PyGMT 指令」。
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <!-- OFFICIAL OVERVIEW -->
-    <section id="official" class="grid">
-      <article class="card col-12">
-        <div class="section-title">
-          <h2>官方 Overview 摘要（PyGMT.org）</h2>
-          <small>權威說法：寫進報告很加分</small>
-        </div>
-        <div class="content">
-          <p>
-            <b>PyGMT</b> 是 <b>Generic Mapping Tools (GMT)</b> 的 <b>Python wrapper</b>。
-            GMT 是在地球、海洋、行星科學等領域被廣泛使用的工具；
-            PyGMT 則提供更「Pythonic」的方式，讓你在 Python 工作流中完成空間資料處理與高品質出圖。
-          </p>
-
-          <div class="kpi">
-            <div class="box">
-              <strong>它能做什麼？</strong>
-              <span>空間資料處理：gridding、filtering、masking、FFT…以及高品質地圖與圖件繪製。</span>
+            
+            <!-- 圖 1.1-5 & 1.1-6 -->
+            <div class="mt-12 glass-panel p-6 rounded-xl border-t-4 border-emerald-500">
+                <h3 class="text-2xl font-bold text-emerald-400 mb-6">延伸應用：經濟與能源探測</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="placeholder-img h-48 w-full mb-4">
+                            <img src="fig1.1-5.jpg" alt="震測反射法">
+                            <div class="placeholder-text">圖 1.1-5 & 1.2-5<br><span class="text-sm font-normal">fig1.1-5.jpg</span></div>
+                        </div>
+                        <h4 class="text-lg font-bold text-white">震測反射法 (Seismic Reflection Method)</h4>
+                        <p class="text-sm text-slate-300 mt-2">利用人造震源(炸藥或震盪車)，接收器捕捉地底岩層(頁岩、砂岩、石灰岩)交界面的微弱反射訊號。繪製出地下構造圖尋找石油背斜，解析度極高。</p>
+                    </div>
+                    <div>
+                        <div class="placeholder-img h-48 w-full mb-4">
+                            <img src="fig1.1-6.jpg" alt="震測剖面與地質解釋">
+                            <div class="placeholder-text">圖 1.1-6 圖片佔位符<br><span class="text-sm font-normal">fig1.1-6.jpg</span></div>
+                        </div>
+                        <h4 class="text-lg font-bold text-white">震測剖面與地質解釋對照</h4>
+                        <p class="text-sm text-slate-300 mt-2">新墨西哥州聖胡安盆地。下方為密集黑白條紋的反射訊號(深度達3.6公里)，上方為專家標示出的岩性(海相頁岩、海岸線沙層)與環境變遷。是鑽井決策核心。</p>
+                    </div>
+                </div>
             </div>
-            <div class="box">
-              <strong>為什麼圖很乾淨？</strong>
-              <span>GMT 以高品質靜態向量圖為核心，可輸出 PDF/PNG/JPG 等格式。</span>
+        </section>
+
+        <!-- 區塊 3：Seismic Hazard 與 Risk -->
+        <section id="hazard-risk" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold border-l-4 border-amber-500 pl-4 mb-8">3. Seismic Hazard 與 Seismic Risk 的區別</h2>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="flex-1 bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 p-8 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                    <h3 class="text-2xl font-black text-red-400 mb-4">Seismic Hazard (地震危害)</h3>
+                    <p class="text-slate-300 text-lg">地震強度是我們<strong class="text-white">無法改變的自然現象</strong>。地震本身不傷人，地表的劇烈搖晃屬於客觀的物理危害。</p>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <svg class="w-10 h-10 text-slate-500 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                </div>
+                <div class="flex-1 bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 p-8 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                    <h3 class="text-2xl font-black text-amber-400 mb-4">Seismic Risk (地震風險)</h3>
+                    <p class="text-slate-300 text-lg">倒塌的建築物才是主因。透過選擇正確的建材與投入耐震設計，我們可以大幅降低倒塌率，進而將地震帶來的<strong class="text-white">風險降到最低</strong>。</p>
+                </div>
             </div>
-            <div class="box">
-              <strong>效能特色</strong>
-              <span>速度快、記憶體效率佳，適合大量或高解析度出圖。</span>
+        </section>
+
+        <!-- 區塊 4：公式 (1) 與波能量衰減 -->
+        <section id="attenuation" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold border-l-4 border-purple-500 pl-4 mb-8">4. 地震波能量衰減原因 (公式 1)</h2>
+            <div class="glass-panel p-8 rounded-2xl">
+                <div class="mb-6">
+                    <p class="text-slate-300 mb-4">地震波在介質中傳播時，能量會隨著距離增加而衰減。衰減主要來自兩個因素：幾何擴散 (能量散佈到更大空間) 與 介質的非彈性吸收 (Q-factor)。</p>
+                    <div class="bg-black/50 p-4 rounded-lg text-center font-mono text-xl text-purple-300 border border-purple-500/30">
+                        A(R) = A₀ × (1 / R) × e^(-π·f·R / Q·v)
+                    </div>
+                </div>
+
+                <!-- 互動：波衰減模擬器 -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8 border-t border-slate-700 pt-8">
+                    <div class="col-span-1 space-y-6">
+                        <h3 class="text-xl font-bold text-white flex items-center"><span class="bg-purple-500 text-white text-xs px-2 py-1 rounded mr-2">互動</span> 衰減模擬器</h3>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-2">傳播距離 R (Distance)</label>
+                            <input type="range" id="distSlider" min="10" max="500" value="100" class="w-full accent-purple-500">
+                            <div class="text-right text-purple-400 font-bold" id="distVal">100 km</div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-2">介質品質因數 Q-factor (數值越低吸收越強)</label>
+                            <input type="range" id="qSlider" min="50" max="1000" value="200" class="w-full accent-purple-500">
+                            <div class="text-right text-purple-400 font-bold" id="qVal">200</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-span-1 lg:col-span-2 bg-slate-800 rounded-xl p-4">
+                        <canvas id="attenuationChart" class="w-full h-64"></canvas>
+                    </div>
+                </div>
             </div>
-          </div>
+        </section>
 
-          <div class="callout">
-            ✅ 你可以把 PyGMT 視為：<b>「把 GMT 的出版級出圖能力，帶進 Python 的可重現分析流程」</b>
-          </div>
-
-          <p style="margin-top:12px">
-            小加分點：在報告中補一句「PyGMT 是在 2017 年左右發起的開源專案，將 GMT 以 Python 介面封裝」，
-            會讓你的來源看起來更「有根據」。
-          </p>
-
-          <div class="links">
-            <a class="linkbtn" href="https://www.pygmt.org/latest/overview.html" target="_blank" rel="noopener">官方 Overview（latest）</a>
-            <a class="linkbtn" href="https://www.pygmt.org/dev/overview.html" target="_blank" rel="noopener">官方 Overview（dev）</a>
-            <a class="linkbtn" href="https://www.pygmt.org/" target="_blank" rel="noopener">PyGMT 官網</a>
-          </div>
-
-          <div class="note">
-            寫作業用一句話模板：<br>
-            <b>「本研究/作業使用 PyGMT（GMT 的 Python wrapper）進行地理資料視覺化與高品質製圖。」</b>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <!-- INSTALL -->
-    <section id="install" class="grid">
-      <article class="card col-12">
-        <div class="section-title">
-          <h2>安裝與環境建議</h2>
-          <small>避免踩雷版</small>
-        </div>
-        <div class="content">
-          <p>
-            最推薦用 <b>conda-forge</b> 安裝（因為 GMT 本身包含不少系統相依套件）。如果你用 pip，常見狀況是
-            「Python 裝好了，但 GMT 或系統 library 沒裝好」。
-          </p>
-
-          <div class="codebar">
-            <div class="tabs" role="tablist" aria-label="install tabs">
-              <button class="tab active" data-tab="conda">Conda（推薦）</button>
-              <button class="tab" data-tab="mamba">Mamba（更快）</button>
-              <button class="tab" data-tab="pip">pip（進階）</button>
+        <!-- 區塊 5：圖 1.2-3、1.2-5(已合併)、1.2-6 說明 -->
+        <section id="hazards-maps" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold border-l-4 border-indigo-500 pl-4 mb-8">5. 危害分佈與抗震表現圖解</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- 圖 1.2-3 -->
+                <div class="glass-panel p-6 rounded-xl">
+                    <div class="placeholder-img h-48 w-full mb-4">
+                        <img src="fig1.2-3.jpg" alt="美國地震危害分布">
+                        <div class="placeholder-text">圖 1.2-3 圖片佔位符<br><span class="text-sm font-normal">fig1.2-3.jpg</span></div>
+                    </div>
+                    <h3 class="text-lg font-bold text-indigo-400">圖 1.2-3：美國地震危害分布</h3>
+                    <p class="text-sm text-slate-300 mt-2">顯示未來 50 年內 2% 發生機率的最大地表加速度。暖色為高風險，主要在板塊交界(加州)。內陸(密西西比河流域)亦有局部高值區，顯示古老斷層仍有顯著風險。</p>
+                </div>
+                <!-- 圖 1.2-6 -->
+                <div class="glass-panel p-6 rounded-xl">
+                    <div class="placeholder-img h-48 w-full mb-4">
+                        <img src="fig1.2-6.jpg" alt="建築物倒塌率與地震震度">
+                        <div class="placeholder-text">圖 1.2-6 圖片佔位符<br><span class="text-sm font-normal">fig1.2-6.jpg</span></div>
+                    </div>
+                    <h3 class="text-lg font-bold text-indigo-400">圖 1.2-6：建築物倒塌率與地震震度</h3>
+                    <p class="text-sm text-slate-300 mt-2">X軸為麥卡利震度分級(MMI)，Y軸為倒塌百分比。科學證明地震不傷人，倒塌建築才是主因。工程設計能顯著改變生存機率。</p>
+                </div>
             </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button class="btn" data-copy="#code-install">複製安裝指令</button>
-              <button class="btn secondary" data-copy="#code-check">複製檢查指令</button>
+        </section>
+
+        <!-- 區塊 6：不同建材與共振模擬 -->
+        <section id="resonance" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold border-l-4 border-rose-500 pl-4 mb-8">6. 建築建材與共振現象</h2>
+            <div class="glass-panel p-8 rounded-2xl grid grid-cols-1 lg:grid-cols-2 gap-12">
+                
+                <div class="space-y-4 text-slate-300 text-sm">
+                    <h3 class="text-2xl font-bold text-white mb-4">建材抗震力 (由弱到強)</h3>
+                    <ul class="space-y-3">
+                        <li class="bg-slate-800 p-3 rounded"><strong class="text-rose-400">土埆磚與弱磚石 (Adobe)：</strong>震度 VII 開始倒塌率急遽攀升，震度 IX 幾乎 100% 倒塌。缺乏韌性無法承受剪力。</li>
+                        <li class="bg-slate-800 p-3 rounded"><strong class="text-rose-400">紅磚結構 (Fired brick)：</strong>稍好，但強震下倒塌率仍迅速突破 50%。</li>
+                        <li class="bg-slate-800 p-3 rounded"><strong class="text-rose-400">木結構 (Timber frame)：</strong>具天然彈性與較輕自重，表現優於傳統磚石。</li>
+                        <li class="bg-slate-800 p-3 rounded"><strong class="text-rose-400">鋼筋混凝土 (RC)：</strong>鋼筋拉力與混凝土壓力結合，能有效抵抗搖晃。</li>
+                        <li class="bg-slate-800 p-3 rounded"><strong class="text-rose-400">耐震設計鋼筋混凝土 (Anti-seismic RC)：</strong>在極端震度 X 下，倒塌率仍控制在極低範圍。</li>
+                    </ul>
+                </div>
+
+                <!-- 互動：建築物共振模擬器 -->
+                <div class="border border-slate-700 rounded-xl p-6 bg-[#1e293b] flex flex-col justify-between">
+                    <div class="mb-4">
+                        <h3 class="text-xl font-bold text-white flex items-center mb-2"><span class="bg-rose-500 text-white text-xs px-2 py-1 rounded mr-2">互動</span> 建築物共振模擬器</h3>
+                        <p class="text-xs text-slate-400">不同高度建築具不同自然頻率。滑動以改變「地震波頻率」，觀察共振 (Resonance)。</p>
+                    </div>
+
+                    <!-- 建築物展示區 -->
+                    <div class="h-48 border-b-4 border-slate-600 flex justify-around items-end pb-1 relative">
+                        <!-- 高樓 (低頻) -->
+                        <div id="b-tall" class="building w-12 h-40 bg-slate-400 border-2 border-slate-500 rounded-t flex flex-col justify-evenly items-center">
+                            <div class="w-8 h-2 bg-slate-800"></div><div class="w-8 h-2 bg-slate-800"></div><div class="w-8 h-2 bg-slate-800"></div><div class="w-8 h-2 bg-slate-800"></div><div class="w-8 h-2 bg-slate-800"></div>
+                        </div>
+                        <!-- 中樓 (中頻) -->
+                        <div id="b-med" class="building w-14 h-24 bg-slate-300 border-2 border-slate-400 rounded-t flex flex-col justify-evenly items-center">
+                            <div class="w-10 h-3 bg-slate-800"></div><div class="w-10 h-3 bg-slate-800"></div><div class="w-10 h-3 bg-slate-800"></div>
+                        </div>
+                        <!-- 矮房 (高頻) -->
+                        <div id="b-short" class="building w-16 h-12 bg-slate-200 border-2 border-slate-300 rounded-t flex flex-col justify-evenly items-center">
+                            <div class="w-12 h-4 bg-slate-800"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">地震波頻率： <span id="freqLabel" class="text-rose-400 font-bold">低頻 (長週期波)</span></label>
+                        <input type="range" id="freqSlider" min="1" max="100" value="10" class="w-full accent-rose-500">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>低頻</span><span>中頻</span><span>高頻</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-          </div>
+        </section>
 
-          <pre id="code-install" data-tabpanel="conda"><code>conda create -n pygmt -c conda-forge python=3.11 pygmt
-conda activate pygmt</code></pre>
+        <!-- 區塊 7：土壤液化 -->
+        <section id="liquefaction" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold border-l-4 border-yellow-500 pl-4 mb-8">7. 土壤液化 (Soil Liquefaction)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <p class="text-slate-300 leading-relaxed mb-6">
+                        數據來自於沉積物紀錄。當大地震發生造成地表破裂或<strong class="text-yellow-400">液化</strong>時，會在土壤層留下痕跡。強烈的搖晃破壞了飽和沙土粒子的接觸結構，使得水壓升高，沙土層瞬間失去承載力，轉變成類似液體的狀態，導致上方建築物下沉或傾斜。
+                    </p>
+                    <button id="btnLiquefaction" class="bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-3 px-6 rounded-lg transition transform hover:scale-105 shadow-lg shadow-yellow-500/20">
+                        ▶ 模擬地震發生 (觸發液化)
+                    </button>
+                </div>
+                
+                <div class="relative bg-slate-800 rounded-xl overflow-hidden border border-slate-700 p-2">
+                    <span class="absolute top-4 left-4 bg-yellow-500 text-black text-xs px-2 py-1 rounded z-10 font-bold">互動動畫</span>
+                    <canvas id="liqCanvas" class="w-full h-64 bg-[#87CEEB] rounded"></canvas>
+                </div>
+            </div>
+        </section>
 
-          <pre id="code-install-mamba" data-tabpanel="mamba" style="display:none"><code>conda install -n base -c conda-forge mamba
-mamba create -n pygmt -c conda-forge python=3.11 pygmt
-mamba activate pygmt</code></pre>
-
-          <pre id="code-install-pip" data-tabpanel="pip" style="display:none"><code># pip 版通常需要你先能在系統上用到 GMT
-# 例如：macOS 用 brew，Linux 用套件管理器，Windows 需確認 GMT 安裝與環境變數
-pip install pygmt</code></pre>
-
-          <pre id="code-check"><code>python -c "import pygmt; print('PyGMT OK ✅', pygmt.__version__)"
-gmt --version</code></pre>
-
-          <div class="note">
-            ✅ 想要最少麻煩：<b>Conda / Mamba 一次裝好 PyGMT + GMT</b>。<br/>
-            🧯 若你是在 Jupyter/Colab 類環境：要注意系統層的 GMT 是否真的可用。
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <!-- RECIPES -->
-    <section id="recipes" class="grid">
-      <article class="card col-6">
-        <div class="section-title">
-          <h2>範例食譜 A：畫一張地形底圖 + 海岸線</h2>
-          <small>最經典的開場</small>
-        </div>
-        <div class="content">
-          <p>
-            這份範例做的事：設定範圍與投影 → 疊地形（含陰影）→ 疊海岸線 → 加色階。
-          </p>
-          <div class="codebar">
-            <button class="btn" data-copy="#code-a">複製程式碼</button>
-          </div>
-          <pre id="code-a"><code>import pygmt
-
-region = [119, 123, 21.5, 25.5]  # 台灣附近範圍（示意）
-fig = pygmt.Figure()
-
-# 地形網格（示意：使用 GMT 內建資料時需可用的環境）
-grid = pygmt.datasets.load_earth_relief(resolution="15s", region=region)
-shade = pygmt.grdgradient(grid=grid, azimuth=315, normalization="t1")
-
-fig.grdimage(
-    grid=grid,
-    region=region,
-    projection="M15c",
-    shading=shade,
-    cmap="geo",
-    frame=["af", "+tPyGMT 地形底圖示例"]
-)
-
-fig.coast(shorelines="1/0.5p,white", borders="1/0.5p,white", water="navy@15")
-fig.colorbar(frame='af+l"Elevation (m)"')
-
-fig.show()</code></pre>
-          <div class="note">
-            小技巧：<code>grdgradient</code> 做陰影後，地形立體感會直接升級。
-          </div>
-        </div>
-      </article>
-
-      <article class="card col-6">
-        <div class="section-title">
-          <h2>範例食譜 B：疊加地震點（大小=規模）</h2>
-          <small>研究圖常用套路</small>
-        </div>
-        <div class="content">
-          <p>
-            你可以用 pandas 讀表，再把經緯度與規模映射到點的大小/顏色。下面用「假資料」示意。
-          </p>
-          <div class="codebar">
-            <button class="btn" data-copy="#code-b">複製程式碼</button>
-          </div>
-          <pre id="code-b"><code>import pandas as pd
-import pygmt
-
-# 假資料：lon, lat, mag
-df = pd.DataFrame({
-    "lon": [121.5, 121.0, 120.8, 122.0],
-    "lat": [24.0, 23.6, 22.9, 24.8],
-    "mag": [4.2, 5.1, 4.6, 6.0]
-})
-
-region = [119, 123, 21.5, 25.5]
-fig = pygmt.Figure()
-fig.basemap(region=region, projection="M15c", frame=["af", "+t地震點疊圖（示意）"])
-fig.coast(land="gray20", water="gray10", shorelines="1/0.4p,white")
-
-# 點大小跟 mag 有關（示意比例）
-sizes = 0.08 + 0.08 * (df["mag"] - df["mag"].min())
-
-fig.plot(
-    x=df["lon"],
-    y=df["lat"],
-    style="c",     # circle
-    size=sizes,
-    fill="tomato",
-    pen="0.3p,white",
-    transparency=15
-)
-
-fig.show()</code></pre>
-          <div class="note">
-            想做得更像論文：加上圖例（legend）、規模分級（bins）、或用顏色代表深度。
-          </div>
-        </div>
-      </article>
-
-      <article class="card col-12">
-        <div class="section-title">
-          <h2>範例食譜 C：板塊邊界與地形景觀（概念版）</h2>
-          <small>把「地科故事」畫出來</small>
-        </div>
-        <div class="content">
-          <p>
-            板塊邊界常見三大類：<b>聚合（隱沒/碰撞）</b>、<b>張裂（離散）</b>、<b>轉形（走滑）</b>。它們對應的典型地形景觀也很有辨識度：
-          </p>
-          <ul>
-            <li><b>聚合邊界：</b>海溝、島弧火山、造山帶、增積楔（例如日本海溝—日本島弧）。</li>
-            <li><b>張裂邊界：</b>洋中脊、裂谷、玄武岩質噴發與新生海洋地殼（例如大西洋中洋脊）。</li>
-            <li><b>轉形邊界：</b>線性谷地、斷層地形、地震頻繁但火山不一定常見（例如聖安德烈斯斷層）。</li>
-          </ul>
-          <div class="callout">
-            🎯 小挑戰：下次看到一張海深/地形圖，先找「海溝」或「洋中脊」的形狀，你會很快開始「用地形猜板塊」。
-          </div>
-          <div class="note">
-            若你要把「板塊邊界線資料」疊上去：請先確定 GeoJSON / Shapefile 的幾何與欄位正常（例如 LineString、座標順序、是否含空幾何），避免出現欄位數不符的 warning。
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <!-- TIPS -->
-    <section id="tips" class="grid">
-      <article class="card col-7">
-        <div class="section-title">
-          <h2>繪圖小技巧（讓圖瞬間高級）</h2>
-          <small>實用清單</small>
-        </div>
-        <div class="content">
-          <ul>
-            <li><b>陰影（shading）</b>：地形一定要試 <code>grdgradient</code>，立體感差很多。</li>
-            <li><b>色階（cmap）</b>：地形用 <code>geo</code>、海深可用適合的藍系色階（視情境）。</li>
-            <li><b>框線與刻度一致</b>：<code>frame=["af", "+tTitle"]</code> 先固定風格，所有圖都用同一套。</li>
-            <li><b>圖例與標註</b>：研究圖的「可讀性」很多時候是圖例與標註決勝負。</li>
-            <li><b>可重現</b>：把 region、projection、cmap、字體參數集中在一段「設定區」。</li>
-          </ul>
-          <div class="note">
-            進階：你可以把「出圖流程」包成函式，做成自己的小型繪圖框架（例如：地形底圖函式、事件疊點函式、圖例函式）。
-          </div>
-        </div>
-      </article>
-
-      <article class="card col-5">
-        <div class="section-title">
-          <h2>你可能會遇到的坑</h2>
-          <small>先知道先贏</small>
-        </div>
-        <div class="content">
-          <ul>
-            <li><b>環境相依</b>：建議 conda-forge 一套裝好。</li>
-            <li><b>資料格式</b>：GeoJSON 欄位/幾何不乾淨會噴 warning。</li>
-            <li><b>投影與範圍</b>：region 設太大或解析度太高，會慢到懷疑人生。</li>
-            <li><b>透明度與層次</b>：先鋪底圖，再疊線、最後疊點與文字。</li>
-          </ul>
-          <div class="callout">
-            ✅ 心法：先把「底圖」做漂亮，再把「資料」疊得清楚。
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <!-- QUIZ -->
-    <section id="quiz" class="grid">
-      <article class="card col-12">
-        <div class="section-title">
-          <h2>30 秒小測驗：你已經懂 PyGMT 了嗎？</h2>
-          <small>答對會給你一個小彩蛋</small>
-        </div>
-        <div class="content">
-          <p>選一個答案，看看你的直覺是否跟地科繪圖老手一致：</p>
-
-          <div class="quiz">
-            <div class="q" data-q="1">
-              <strong>Q1：PyGMT 最大的核心價值是？</strong>
-              <div class="opt">
-                <button data-a="A">A. 可以玩遊戲</button>
-                <button data-a="B">B. 用 Python 做出版級地圖繪圖</button>
-                <button data-a="C">C. 取代所有資料分析工具</button>
-              </div>
-              <div class="result"></div>
+        <!-- 區塊 8：圖 1.2-14 地震預報與預測 -->
+        <section id="forecast" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold border-l-4 border-green-500 pl-4 mb-8">8. 地震預報 (Forecast) vs. 預測 (Prediction)</h2>
+            
+            <div class="placeholder-img h-64 w-full mb-8">
+                <img src="fig1.2-14.jpg" alt="地震危害預估的模型不確定性">
+                <div class="placeholder-text">圖 1.2-14 圖片佔位符<br><span class="text-sm font-normal">fig1.2-14.jpg</span></div>
             </div>
 
-            <div class="q" data-q="2">
-              <strong>Q2：想讓地形看起來更立體，最常加什麼？</strong>
-              <div class="opt">
-                <button data-a="A">A. 陰影（shading / grdgradient）</button>
-                <button data-a="B">B. 把字體改成粉紅色</button>
-                <button data-a="C">C. 把海岸線關掉</button>
-              </div>
-              <div class="result"></div>
+            <p class="text-slate-300 mb-6">圖 1.2-14 展示了美國新馬德里地震帶預期地表加速度(PGA)分佈圖。透過改變最大規模(Mmax)假設與衰減模型(Frankel vs Toro)，危險區範圍顯著不同。這完美解釋了預報與預測的差異：</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-800 p-6 rounded-xl border-t-4 border-green-400">
+                    <h3 class="text-xl font-bold text-green-400 mb-2">地震預報 (Forecast)</h3>
+                    <p class="text-slate-300 text-sm">長期且機率性的。告訴我們某區域在未來長時期內（如50年），有多大機率發生多強搖晃。是建築法規與都市計畫的依據，相對成熟具科學價值。</p>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-xl border-t-4 border-red-400">
+                    <h3 class="text-xl font-bold text-red-400 mb-2">地震預測 (Prediction)</h3>
+                    <p class="text-slate-300 text-sm">短期且明確的。要求精確指出「何時、何地、規模多大」。因為地震叢集性與不規律性，目前在預測上仍充滿極大挑戰。</p>
+                </div>
             </div>
-          </div>
+        </section>
 
-          <div class="note" id="easter" style="display:none">
-            🎉 彩蛋：你已解鎖「地科繪圖咒語」——<b>先底圖、再資料、最後標註與圖例</b>。<br/>
-            這句話能救你很多張圖（真的）。
-          </div>
-        </div>
-      </article>
-    </section>
+        <!-- 區塊 9：Seismic Gap -->
+        <section id="gap" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold border-l-4 border-orange-500 pl-4 mb-8">9. 地震空區 (Seismic Gap) 理論</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="space-y-6">
+                    <div class="placeholder-img h-48 w-full">
+                        <img src="fig1.2-15.jpg" alt="聖安德列斯斷層的古地震時間序列">
+                        <div class="placeholder-text">圖 1.2-15 圖片佔位符<br><span class="text-sm font-normal">fig1.2-15.jpg</span></div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-orange-400">圖 1.2-15：聖安德列斯斷層古地震序列</h3>
+                        <p class="text-sm text-slate-300 mt-2">透過挖掘探槽與碳-14定年，揭示地震具「叢集性(Clusters)」與「不規律性」。間隔時間短至22年長至300年以上。這種複雜性讓預測極其困難。</p>
+                    </div>
+                </div>
 
-    <footer>
-      <div class="note">
-        你可以直接把這個檔案存成 <b>index.html</b> 打開就能看。<br/>
-        若你之後要再加分：可以把你自己的 PyGMT 圖（輸出 PNG/PDF）放到一個 gallery 區塊，會非常像作品集。
-      </div>
-      <div style="opacity:.8;margin-top:10px">
-        © <span id="year"></span> PyGMT mini-site · Made for clean maps & clean grades.
-      </div>
+                <div class="space-y-6">
+                    <div class="placeholder-img h-48 w-full">
+                        <img src="fig1.2-16.jpg" alt="地震空區的填補">
+                        <div class="placeholder-text">圖 1.2-16 圖片佔位符<br><span class="text-sm font-normal">fig1.2-16.jpg</span></div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-orange-400">圖 1.2-16：地震空區的填補 (Loma Prieta)</h3>
+                        <p class="text-sm text-slate-300 mt-2"><strong>地震發生前：</strong>斷層鎖定，周圍有小地震，唯獨 Loma Prieta 異常安靜(空區)，能量持續累積。<br><strong>地震發生後：</strong>1989年破裂精確發生在空區內被餘震填補。證實空區假說：長期安靜區段最終會以大地震補齊位移。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 區塊 10：地震預測的方法 -->
+        <section id="methods" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold border-l-4 border-teal-500 pl-4 mb-8">10. 評估與預測地震的方法</h2>
+            <div class="space-y-4">
+                <!-- Accordion Item 1 -->
+                <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700">
+                    <button class="w-full px-6 py-4 text-left font-bold text-lg text-teal-300 bg-slate-800 hover:bg-slate-700 focus:outline-none" onclick="toggleAccordion('acc1')">
+                        探槽開挖與碳-14定年法 (Paleoseismology)
+                    </button>
+                    <div id="acc1" class="px-6 pb-4 text-slate-300 text-sm hidden">
+                        挖掘沉積物紀錄。當地表破裂或液化時會在土壤留下痕跡。透過碳-14定年估算古代地震發生年份，用以找出復發週期 (如 Pallett Creek 研究)。
+                    </div>
+                </div>
+                <!-- Accordion Item 2 -->
+                <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700">
+                    <button class="w-full px-6 py-4 text-left font-bold text-lg text-teal-300 bg-slate-800 hover:bg-slate-700 focus:outline-none" onclick="toggleAccordion('acc2')">
+                        地震空區監測 (Seismic Gap Monitoring)
+                    </button>
+                    <div id="acc2" class="px-6 pb-4 text-slate-300 text-sm hidden">
+                        追蹤板塊邊界上長期缺乏微小地震活動的區段（鎖定狀態）。這些區域因能量不斷累積，被視為未來發生大型破裂的高風險區。
+                    </div>
+                </div>
+                <!-- Accordion Item 3 -->
+                <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700">
+                    <button class="w-full px-6 py-4 text-left font-bold text-lg text-teal-300 bg-slate-800 hover:bg-slate-700 focus:outline-none" onclick="toggleAccordion('acc3')">
+                        衰減模型與機率預估 (Hazard Modeling)
+                    </button>
+                    <div id="acc3" class="px-6 pb-4 text-slate-300 text-sm hidden">
+                        使用如 Frankel 或 Toro 提出的震波衰減公式，設定最大規模情境，產出機率分佈圖（預報）。提供未來特定年限內超過特定地表加速度的機率。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 區塊 11：核試爆監測與波形比對 -->
+        <section id="nuclear" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold border-l-4 border-fuchsia-500 pl-4 mb-8">11. 地震學與地下核試爆監測</h2>
+            
+            <p class="text-slate-300 mb-8">利用實體波震級 (mb) 反推核爆能量。圖 1.2-18 證明了蘇聯在 TTBT 條約生效後，爆炸威力均落在 150 千噸 (150-kiloton TTBT limit) 上限之下，提供了不可抵賴的科學證據。</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                <div class="placeholder-img h-48 w-full">
+                    <img src="fig1.2-18.jpg" alt="蘇聯地下核試爆產量估算">
+                    <div class="placeholder-text">圖 1.2-18<br><span class="text-sm font-normal">fig1.2-18.jpg</span></div>
+                </div>
+                <div class="placeholder-img h-48 w-full">
+                    <img src="fig1.2-19.jpg" alt="自然地震與核爆波形差異">
+                    <div class="placeholder-text">圖 1.2-19<br><span class="text-sm font-normal">fig1.2-19.jpg</span></div>
+                </div>
+            </div>
+
+            <!-- 互動：波形比對 -->
+            <div class="glass-panel p-6 rounded-xl border border-fuchsia-500/30">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-white flex items-center"><span class="bg-fuchsia-500 text-white text-xs px-2 py-1 rounded mr-2">互動</span> 波形比對：核爆 vs 自然地震</h3>
+                    <div class="flex bg-slate-800 rounded-lg p-1">
+                        <button id="btnEq" class="px-4 py-2 rounded-md text-sm font-bold bg-fuchsia-600 text-white transition">自然地震 (斷層)</button>
+                        <button id="btnNuke" class="px-4 py-2 rounded-md text-sm font-bold text-slate-400 hover:text-white transition">核子試爆 (壓力源)</button>
+                    </div>
+                </div>
+                
+                <div class="relative h-48 bg-black rounded-lg border border-slate-600 overflow-hidden">
+                    <canvas id="waveformCanvas" class="w-full h-full"></canvas>
+                    <div id="waveLabelP" class="absolute top-4 left-1/4 text-yellow-400 text-sm font-bold">P 波 (初達波)</div>
+                    <div id="waveLabelS" class="absolute top-4 left-2/4 text-cyan-400 text-sm font-bold">S 波 (剪力波)</div>
+                </div>
+                <div class="mt-4 text-sm text-slate-400" id="waveDesc">
+                    <strong>自然地震 (斷層錯動)：</strong> 剪力源，產生顯著的 S 波與表面波，P 波相對較小。
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 border-t border-slate-800 py-12 text-center text-slate-500 text-sm">
+        <p>基於所提供參考資料建立之地震學教育互動網頁</p>
     </footer>
-  </main>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <!-- JavaScript 互動邏輯 -->
+    <script>
+        // --- 手風琴選單邏輯 (Section 10) ---
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            if(el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
 
-  <script>
-    // Year
-    document.getElementById("year").textContent = new Date().getFullYear();
+        // --- 1. 衰減模擬器 (Chart.js) ---
+        const distSlider = document.getElementById('distSlider');
+        const qSlider = document.getElementById('qSlider');
+        const distVal = document.getElementById('distVal');
+        const qVal = document.getElementById('qVal');
+        const ctxChart = document.getElementById('attenuationChart').getContext('2d');
 
-    // Tabs (Install)
-    const tabs = document.querySelectorAll(".tab");
-    const codeConda = document.getElementById("code-install");
-    const codeMamba = document.getElementById("code-install-mamba");
-    const codePip = document.getElementById("code-install-pip");
-    function showInstall(which){
-      codeConda.style.display = (which==="conda") ? "block" : "none";
-      codeMamba.style.display = (which==="mamba") ? "block" : "none";
-      codePip.style.display   = (which==="pip")   ? "block" : "none";
-    }
-    tabs.forEach(t=>{
-      t.addEventListener("click", ()=>{
-        tabs.forEach(x=>x.classList.remove("active"));
-        t.classList.add("active");
-        showInstall(t.dataset.tab);
-      });
-    });
-
-    // Copy buttons
-    const toast = document.getElementById("toast");
-    let toastTimer = null;
-
-    function showToast(msg){
-      toast.textContent = msg;
-      toast.style.display = "block";
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(()=>toast.style.display="none", 1700);
-    }
-
-    async function copyText(selector){
-      const el = document.querySelector(selector);
-      if(!el) return;
-      const text = el.innerText.trim();
-      try{
-        await navigator.clipboard.writeText(text);
-        showToast("已複製到剪貼簿 ✅");
-      }catch(e){
-        // Fallback
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        ta.remove();
-        showToast("已複製到剪貼簿 ✅（fallback）");
-      }
-    }
-
-    document.querySelectorAll("[data-copy]").forEach(btn=>{
-      btn.addEventListener("click", ()=>copyText(btn.getAttribute("data-copy")));
-    });
-
-    // Quiz
-    const answer = {
-      1: {correct:"B", msg:"✅ 沒錯！PyGMT 的靈魂就是：用 Python 做出版級地圖繪圖與流程自動化。"},
-      2: {correct:"A", msg:"✅ 正解！陰影（shading）一加，地形立體感直接翻倍。"}
-    };
-    const easter = document.getElementById("easter");
-    const state = {1:false,2:false};
-
-    document.querySelectorAll(".q").forEach(block=>{
-      const qid = block.getAttribute("data-q");
-      const res = block.querySelector(".result");
-      block.querySelectorAll("button").forEach(b=>{
-        b.addEventListener("click", ()=>{
-          const pick = b.getAttribute("data-a");
-          res.style.display = "block";
-          if(pick === answer[qid].correct){
-            res.textContent = answer[qid].msg;
-            res.style.borderColor = "rgba(52,211,153,.55)";
-            res.style.background = "rgba(52,211,153,.08)";
-            state[qid] = true;
-          }else{
-            res.textContent = "❌ 再想一下：提示是「地科出圖」的核心需求。";
-            res.style.borderColor = "rgba(251,113,133,.55)";
-            res.style.background = "rgba(251,113,133,.08)";
-            state[qid] = false;
-          }
-          if(state[1] && state[2]) easter.style.display = "block";
+        // 初始化圖表
+        let attenChart = new Chart(ctxChart, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 50}, (_, i) => i * 10), // 距離 0 - 500
+                datasets:[{
+                    label: '地震波振幅 (Amplitude)',
+                    borderColor: '#a855f7',
+                    backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: true,
+                    data: []
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 200 },
+                scales: {
+                    x: { title: { display: true, text: '距離 (Distance)', color: '#94a3b8' }, ticks: { color: '#64748b' }, grid: { color: '#334155' } },
+                    y: { title: { display: true, text: '振幅', color: '#94a3b8' }, min: 0, max: 100, ticks: { color: '#64748b' }, grid: { color: '#334155' } }
+                },
+                plugins: { legend: { labels: { color: '#cbd5e1' } } }
+            }
         });
-      });
-    });
-  </script>
-</body>
-</html>
+
+        function updateChart() {
+            const R_focus = parseInt(distSlider.value);
+            const Q = parseInt(qSlider.value);
+            distVal.innerText = R_focus + " km";
+            qVal.innerText = Q;
+
+            const f = 2; // 固定頻率
+            const v = 3; // 固定波速
+            const A0 = 1000;
+
+            const newData = attenChart.data.labels.map(R => {
+                if (R === 0) return 100; // 避免除以0
+                // 公式：A = A0 * (1/R) * exp(-pi*f*R / (Q*v))
+                let A = A0 * (1/Math.sqrt(R)) * Math.exp((-Math.PI * f * R) / (Q * v));
+                return Math.min(A, 100);
+            });
+
+            attenChart.data.datasets[0].data = newData;
+            attenChart.update();
+        }
+
+        distSlider.addEventListener('input', updateChart);
+        qSlider.addEventListener('input', updateChart);
+        updateChart(); // 初始呼叫
+
+        // --- 2. 建築物共振模擬器 ---
+        const freqSlider = document.getElementById('freqSlider');
+        const freqLabel = document.getElementById('freqLabel');
+        const bTall = document.getElementById('b-tall');
+        const bMed = document.getElementById('b-med');
+        const bShort = document.getElementById('b-short');
+
+        freqSlider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            // 重置
+            bTall.classList.remove('resonating');
+            bMed.classList.remove('resonating');
+            bShort.classList.remove('resonating');
+
+            if (val < 33) {
+                freqLabel.innerText = "低頻 (長週期波)";
+                if(val > 10 && val < 30) bTall.classList.add('resonating');
+            } else if (val < 66) {
+                freqLabel.innerText = "中頻";
+                if(val > 40 && val < 60) bMed.classList.add('resonating');
+            } else {
+                freqLabel.innerText = "高頻 (短週期波)";
+                if(val > 75 && val < 95) bShort.classList.add('resonating');
+            }
+        });
+
+        // --- 3. 土壤液化 Canvas 動畫 ---
+        const canvasLiq = document.getElementById('liqCanvas');
+        const ctxLiq = canvasLiq.getContext('2d');
+        let liqAnimating = false;
+        let particles =[];
+        let buildingState = { y: 60, angle: 0 };
+        
+        // 設定 Canvas 大小
+        function resizeLiqCanvas() {
+            canvasLiq.width = canvasLiq.parentElement.clientWidth;
+            canvasLiq.height = 256;
+        }
+        window.addEventListener('resize', resizeLiqCanvas);
+        resizeLiqCanvas();
+
+        // 產生沙土粒子
+        function initParticles() {
+            particles =
