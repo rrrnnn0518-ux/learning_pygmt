@@ -4,30 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>地震學第一章介紹 | 互動科學教學</title>
-    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Chart.js 用於圖表繪製 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- 引入 Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; background-color: #0f172a; color: #f8fafc; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #1e293b; }
         ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
-        
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .placeholder-img { display: flex; align-items: center; justify-content: center; background: #1e293b; border-radius: 0.5rem; overflow: hidden; position: relative; }
         .placeholder-img img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s; }
         .placeholder-img:hover img { transform: scale(1.02); }
         
-        /* 建築物共振動畫設定 */
         .building { transform-origin: bottom center; transition: transform 0.1s; }
         @keyframes shake-intense { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 50% { transform: rotate(0deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
         .resonating { animation: shake-intense 0.1s infinite; border-color: #ef4444 !important; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
-        
-        /* 手風琴動畫 */
         .accordion-content { transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; max-height: 0; opacity: 0; overflow: hidden; }
         .accordion-content.open { max-height: 500px; opacity: 1; }
     </style>
@@ -47,7 +39,7 @@
                     <a href="#hazards-maps" class="hover:text-blue-400 transition">危害圖解</a>
                     <a href="#resonance" class="hover:text-blue-400 transition">共振模擬</a>
                     <a href="#liquefaction" class="hover:text-blue-400 transition">土壤液化</a>
-                    <a href="#forecast" class="hover:text-blue-400 transition">預報與預測</a>
+                    <a href="#forecast" class="hover:text-blue-400 transition">預報預測</a>
                     <a href="#gap" class="hover:text-blue-400 transition">地震空區</a>
                     <a href="#nuclear" class="hover:text-blue-400 transition">核爆監測</a>
                 </div>
@@ -69,20 +61,20 @@
         <!-- 區塊 1：地震學研究範疇 -->
         <section id="scope" class="scroll-mt-24">
             <h2 class="text-3xl font-bold border-l-4 border-blue-500 pl-4 mb-8">1. 地震學研究範疇</h2>
-            <div class="glass-panel p-8 rounded-2xl leading-relaxed text-slate-300 space-y-4 shadow-xl shadow-blue-900/10">
+            <div class="glass-panel p-8 rounded-2xl leading-relaxed text-slate-300 space-y-4 shadow-xl">
                 <p>地震學研究中最核心的三個元素為：<strong class="text-blue-300">震源 (Source)</strong>、<strong class="text-blue-300">介質 (Medium)</strong> 與 <strong class="text-blue-300">接收器 (Receiver)</strong>。我們可以將其視為一個訊號傳輸的過程：</p>
                 <ul class="list-disc pl-6 space-y-2">
-                    <li><strong>震源 (Source) 與原始脈衝：</strong>代表能量釋放的起點。震源產生的原始脈衝通常是簡單集中的波形。定義了 Origin time (發震時間)。</li>
+                    <li><strong>震源 (Source) 與原始脈衝：</strong>代表能量釋放起點。理想實驗中，原始脈衝通常簡單集中。定義了 Origin time (發震時間)。</li>
                     <li><strong>介質 (Medium) 與傳遞過程：</strong>震波進入地球內部時，岩石層位、密度變化及不連續面會改變震波。震波行進花費的時間稱為 Travel time (走時)。</li>
                     <li><strong>接收器 (Receiver) 與地震圖：</strong>觀測站地震儀在 Arrival time (抵達時間) 捕捉到經過地底旅行後的震波。</li>
                 </ul>
-                <p><strong>關鍵觀察：</strong>我們透過研究接收器上記錄到「變得複雜」的地震圖，反推地底下的介質藏了什麼秘密，以及震源當初是如何破裂的。</p>
+                <p>我們透過研究接收器上「變得複雜」的地震圖，反推地底下的介質藏了什麼秘密，以及震源當初是如何破裂的。</p>
             </div>
         </section>
 
-        <!-- 區塊 2：圖解說明 -->
+        <!-- 區塊 2：觀測原理圖解 -->
         <section id="figures-1" class="scroll-mt-24">
-            <h2 class="text-3xl font-bold border-l-4 border-cyan-500 pl-4 mb-8">2. 地震波的傳遞與觀測圖解</h2>
+            <h2 class="text-3xl font-bold border-l-4 border-cyan-500 pl-4 mb-8">2. 地震波傳遞與觀測原理</h2>
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-12">
                 <div class="space-y-4">
                     <div class="placeholder-img h-64 w-full bg-white/5 p-2 rounded">
@@ -110,11 +102,11 @@
                         <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.1-4.png" alt="圖 1.1-4">
                     </div>
                     <h3 class="text-xl font-bold text-cyan-400">圖 1.1-4：深源地震與多次核幔反射波</h3>
-                    <p class="text-sm text-slate-300">ScS 是地核的回聲。這張圖記錄到了 ScS2, ScS3 等多次反彈訊號，直接證實了地球內部存在性質迥異的核幔邊界。</p>
+                    <p class="text-sm text-slate-300">ScS 是地核的回聲。記錄到了 ScS2, ScS3 等多次反彈訊號，直接證實了地球內部存在性質迥異的核幔邊界。</p>
                 </div>
             </div>
             
-            <div class="mt-12 glass-panel p-6 rounded-xl border-t-4 border-emerald-500 shadow-xl shadow-emerald-900/10">
+            <div class="mt-12 glass-panel p-6 rounded-xl border-t-4 border-emerald-500 shadow-xl">
                 <h3 class="text-2xl font-bold text-emerald-400 mb-6">延伸應用：經濟與能源探測</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
@@ -122,14 +114,14 @@
                             <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.1-5.png" alt="圖 1.1-5">
                         </div>
                         <h4 class="text-lg font-bold text-white">圖 1.1-5：震測反射法 (Seismic Reflection)</h4>
-                        <p class="text-sm text-slate-300 mt-2">人工震源發出波，檢波器捕捉地層交界的反射。雙向走時(TWT)搭配波速能換算深度，是尋找石油的基本工具。</p>
+                        <p class="text-sm text-slate-300">人工震源發出波，檢波器捕捉地層交界的反射。雙向走時(TWT)搭配波速能換算深度，是尋找石油的基本工具。</p>
                     </div>
                     <div>
                         <div class="placeholder-img h-64 w-full mb-4 bg-white/5 p-2 rounded">
                             <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.1-6.png" alt="圖 1.1-6">
                         </div>
                         <h4 class="text-lg font-bold text-white">圖 1.1-6：震測剖面與地質解釋對照</h4>
-                        <p class="text-sm text-slate-300 mt-2">美國聖胡安盆地。下圖黑白條紋代表地層交界反射，上圖為地質學家標示的岩性，是鑽探決策的核心依據。</p>
+                        <p class="text-sm text-slate-300">美國聖胡安盆地。下圖黑白條紋代表地層交界反射，上圖為地質學家標示的岩性，是鑽探決策的核心依據。</p>
                     </div>
                 </div>
             </div>
@@ -139,16 +131,13 @@
         <section id="hazard-risk" class="scroll-mt-24">
             <h2 class="text-3xl font-bold border-l-4 border-amber-500 pl-4 mb-8">3. Hazard 與 Risk 的區別</h2>
             <div class="flex flex-col md:flex-row gap-8">
-                <div class="flex-1 bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 p-8 rounded-2xl relative overflow-hidden group shadow-lg">
-                    <h3 class="text-2xl font-black text-red-400 mb-4 z-10 relative">Seismic Hazard (地震危害)</h3>
-                    <p class="text-slate-300 text-lg z-10 relative">地震強度是我們<strong class="text-white">無法改變的自然現象</strong>。地震本身不傷人，地表的劇烈搖晃屬於客觀的物理危害。</p>
+                <div class="flex-1 bg-slate-800 border border-slate-700 p-8 rounded-2xl">
+                    <h3 class="text-2xl font-black text-red-400 mb-4">Seismic Hazard (地震危害)</h3>
+                    <p class="text-slate-300 text-lg">地震強度是我們<strong class="text-white">無法改變的自然現象</strong>。地震本身不傷人，地表的劇烈搖晃屬於客觀的物理危害。</p>
                 </div>
-                <div class="flex flex-col justify-center items-center">
-                    <svg class="w-10 h-10 text-slate-500 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                </div>
-                <div class="flex-1 bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 p-8 rounded-2xl relative overflow-hidden group shadow-lg">
-                    <h3 class="text-2xl font-black text-amber-400 mb-4 z-10 relative">Seismic Risk (地震風險)</h3>
-                    <p class="text-slate-300 text-lg z-10 relative">倒塌的建築才是主因。透過選擇建材與耐震設計，我們可以大幅降低倒塌率，將地震帶來的<strong class="text-white">風險降到最低</strong>。</p>
+                <div class="flex-1 bg-slate-800 border border-slate-700 p-8 rounded-2xl">
+                    <h3 class="text-2xl font-black text-amber-400 mb-4">Seismic Risk (地震風險)</h3>
+                    <p class="text-slate-300 text-lg">倒塌的建築才是主因。透過選擇建材與耐震設計，我們可以大幅降低倒塌率，將地震帶來的<strong class="text-white">風險降到最低</strong>。</p>
                 </div>
             </div>
         </section>
@@ -156,90 +145,77 @@
         <!-- 區塊 4：衰減公式 -->
         <section id="attenuation" class="scroll-mt-24">
             <h2 class="text-3xl font-bold border-l-4 border-purple-500 pl-4 mb-8">4. 地震波能量衰減</h2>
-            <div class="glass-panel p-8 rounded-2xl shadow-xl shadow-purple-900/10">
-                <div class="mb-6">
-                    <p class="text-slate-300 mb-4">地震波能量衰減來自：幾何擴散 (幾何擴散參數) 以及 介質非彈性吸收 (Q-factor)。</p>
-                    <div class="bg-black/50 p-6 rounded-lg text-center font-mono text-xl md:text-2xl text-purple-300 border border-purple-500/30">
-                        A(r) = A₀ × (1 / r) × e<sup class="text-sm">(-π·f·r / Q·v)</sup>
-                    </div>
+            <div class="glass-panel p-8 rounded-2xl shadow-xl">
+                <p class="text-slate-300 mb-4">地震波能量衰減來自：幾何擴散 以及 介質非彈性吸收 (Q-factor)。</p>
+                <div class="bg-black/50 p-6 rounded-lg text-center font-mono text-2xl text-purple-300 border border-purple-500/30 mb-8">
+                    A(r) = A₀ × (1 / r) × e<sup class="text-sm">(-π·f·r / Q·v)</sup>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8 border-t border-slate-700 pt-8">
-                    <div class="col-span-1 space-y-6 bg-slate-800/50 p-6 rounded-xl border border-slate-700">
-                        <h3 class="text-xl font-bold text-white flex items-center mb-4"><span class="bg-purple-500 text-white text-xs px-2 py-1 rounded mr-2">互動</span> 衰減模擬器</h3>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-400 mb-2">傳播距離 r (km)</label>
+                <!-- 互動：波衰減模擬器 -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="col-span-1 bg-slate-800/50 p-6 rounded-xl border border-slate-700">
+                        <h3 class="text-xl font-bold text-white mb-4"><span class="bg-purple-500 text-xs px-2 py-1 rounded mr-2">互動</span>衰減模擬器</h3>
+                        <div class="mb-4">
+                            <label class="block text-sm text-slate-400 mb-2">傳播距離 r (km)</label>
                             <input type="range" id="distSlider" min="10" max="500" value="100" class="w-full accent-purple-500">
-                            <div class="text-right text-purple-400 font-bold mt-1" id="distVal">100 km</div>
+                            <div class="text-right text-purple-400 font-bold" id="distVal">100 km</div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-400 mb-2">介質 Q 值 (數值越低吸收越強)</label>
+                            <label class="block text-sm text-slate-400 mb-2">介質 Q 值 (數值低吸收強)</label>
                             <input type="range" id="qSlider" min="50" max="1000" value="200" class="w-full accent-purple-500">
-                            <div class="text-right text-purple-400 font-bold mt-1" id="qVal">200</div>
+                            <div class="text-right text-purple-400 font-bold" id="qVal">200</div>
                         </div>
                     </div>
-                    <div class="col-span-1 lg:col-span-2 bg-slate-800 rounded-xl p-4 border border-slate-700">
-                        <canvas id="attenuationChart" class="w-full h-64"></canvas>
+                    <div class="col-span-1 lg:col-span-2 bg-slate-800 rounded-xl p-4 border border-slate-700 h-64">
+                        <canvas id="attenuationChart"></canvas>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 區塊 5：危害分佈 -->
+        <!-- 區塊 5：危害分佈圖 -->
         <section id="hazards-maps" class="scroll-mt-24">
             <h2 class="text-3xl font-bold border-l-4 border-indigo-500 pl-4 mb-8">5. 危害分佈與圖解</h2>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="glass-panel p-6 rounded-xl flex flex-col justify-between">
-                    <div>
-                        <div class="placeholder-img h-48 w-full mb-4 bg-white/5 p-2 rounded">
-                            <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-3.png" alt="圖 1.2-3">
-                        </div>
-                        <h3 class="text-lg font-bold text-indigo-400">圖 1.2-3：美國地震危害分布</h3>
-                        <p class="text-sm text-slate-300 mt-2">顯示未來50年內2%發生機率的最大地表加速度。板塊交界為高風險，古老斷層內陸區亦有局部高風險。</p>
-                    </div>
+                <div class="glass-panel p-6 rounded-xl">
+                    <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-3.png" class="w-full h-48 object-contain mb-4 bg-white/5 rounded">
+                    <h3 class="text-lg font-bold text-indigo-400">圖 1.2-3：美國地震危害分布</h3>
+                    <p class="text-sm text-slate-300 mt-2">顯示未來50年內2%發生機率的最大地表加速度。板塊交界與古老斷層內陸區皆有高風險。</p>
                 </div>
-                <div class="glass-panel p-6 rounded-xl flex flex-col justify-between">
-                    <div>
-                        <div class="placeholder-img h-48 w-full mb-4 bg-white/5 p-2 rounded">
-                            <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-5.png" alt="圖 1.2-5">
-                        </div>
-                        <h3 class="text-lg font-bold text-indigo-400">圖 1.2-5：強地動衰減</h3>
-                        <p class="text-sm text-slate-300 mt-2">展示不同規模地震加速度隨距離衰減。美國東部岩石傳導效率較西部高，同規模地震在東部感受範圍更廣。</p>
-                    </div>
+                <div class="glass-panel p-6 rounded-xl">
+                    <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-5.png" class="w-full h-48 object-contain mb-4 bg-white/5 rounded">
+                    <h3 class="text-lg font-bold text-indigo-400">圖 1.2-5：強地動衰減</h3>
+                    <p class="text-sm text-slate-300 mt-2">展示不同規模地震加速度隨距離衰減。美國東部岩石傳導效率較西部高，感受範圍更廣。</p>
                 </div>
-                <div class="glass-panel p-6 rounded-xl flex flex-col justify-between">
-                    <div>
-                        <div class="placeholder-img h-48 w-full mb-4 bg-white/5 p-2 rounded">
-                            <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-6.png" alt="圖 1.2-6">
-                        </div>
-                        <h3 class="text-lg font-bold text-indigo-400">圖 1.2-6：倒塌率與震度</h3>
-                        <p class="text-sm text-slate-300 mt-2">橫軸震度(MMI)，縱軸倒塌率。顯示地震不傷人，建材(土埆磚 vs 耐震RC)才是決定生存能力的主因。</p>
-                    </div>
+                <div class="glass-panel p-6 rounded-xl">
+                    <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-6.png" class="w-full h-48 object-contain mb-4 bg-white/5 rounded">
+                    <h3 class="text-lg font-bold text-indigo-400">圖 1.2-6：倒塌率與震度</h3>
+                    <p class="text-sm text-slate-300 mt-2">證明地震不傷人，建材(土埆磚 vs 耐震RC)才是決定生存能力的主因。</p>
                 </div>
             </div>
         </section>
 
-        <!-- 區塊 6：建築共振 -->
+        <!-- 區塊 6：建築共振互動 -->
         <section id="resonance" class="scroll-mt-24">
             <h2 class="text-3xl font-bold border-l-4 border-rose-500 pl-4 mb-8">6. 建築建材與共振現象</h2>
-            <div class="glass-panel p-8 rounded-2xl grid grid-cols-1 lg:grid-cols-2 gap-12 shadow-xl shadow-rose-900/10">
-                <div class="space-y-4 text-slate-300 text-sm">
+            <div class="glass-panel p-8 rounded-2xl grid grid-cols-1 lg:grid-cols-2 gap-12 shadow-xl">
+                <div class="space-y-4">
                     <h3 class="text-2xl font-bold text-white mb-4">建材抗震力</h3>
-                    <ul class="space-y-3">
+                    <ul class="text-sm text-slate-300 space-y-3">
                         <li class="bg-slate-800 p-3 rounded border-l-2 border-rose-600"><strong class="text-rose-400">土埆磚與弱磚石：</strong>震度IX幾乎100%倒塌，無韌性。</li>
                         <li class="bg-slate-800 p-3 rounded border-l-2 border-yellow-500"><strong class="text-yellow-400">木結構：</strong>具天然彈性，抗震表現優於傳統磚石。</li>
                         <li class="bg-slate-800 p-3 rounded border-l-2 border-teal-400"><strong class="text-teal-400">耐震設計 RC：</strong>極端震度下倒塌率仍極低。</li>
                     </ul>
                 </div>
-                <div class="border border-slate-700 rounded-xl p-6 bg-[#1e293b] flex flex-col justify-between">
-                    <h3 class="text-xl font-bold text-white flex items-center mb-2"><span class="bg-rose-500 text-white text-xs px-2 py-1 rounded mr-2">互動</span> 建築共振模擬器</h3>
-                    <p class="text-xs text-slate-400 mb-4">不同高度建築具不同自然頻率。當地震波頻率對應時，建築將產生劇烈共振。</p>
-                    <div class="h-48 border-b-4 border-slate-600 flex justify-around items-end pb-1 relative">
-                        <div id="b-tall" class="building w-12 h-40 bg-slate-400 border-2 border-slate-500 rounded-t flex flex-col justify-evenly items-center shadow-lg"><div class="w-8 h-2 bg-slate-800"></div><div class="w-8 h-2 bg-slate-800"></div></div>
-                        <div id="b-med" class="building w-14 h-24 bg-slate-300 border-2 border-slate-400 rounded-t flex flex-col justify-evenly items-center shadow-lg"><div class="w-10 h-3 bg-slate-800"></div></div>
-                        <div id="b-short" class="building w-16 h-12 bg-slate-200 border-2 border-slate-300 rounded-t flex flex-col justify-evenly items-center shadow-lg"><div class="w-12 h-4 bg-slate-800"></div></div>
+                <div class="border border-slate-700 rounded-xl p-6 bg-[#1e293b]">
+                    <h3 class="text-xl font-bold text-white flex items-center mb-2"><span class="bg-rose-500 px-2 py-1 rounded mr-2 text-xs">互動</span> 建築共振模擬器</h3>
+                    <p class="text-xs text-slate-400 mb-6">不同高度建築具不同自然頻率。滑動頻率觀察共振現象。</p>
+                    <div class="h-40 border-b-4 border-slate-600 flex justify-around items-end pb-1">
+                        <div id="b-tall" class="building w-12 h-32 bg-slate-400 border-2 border-slate-500 rounded-t flex flex-col justify-evenly items-center shadow-lg"><div class="w-8 h-2 bg-slate-800"></div><div class="w-8 h-2 bg-slate-800"></div></div>
+                        <div id="b-med" class="building w-14 h-20 bg-slate-300 border-2 border-slate-400 rounded-t flex flex-col justify-evenly items-center shadow-lg"><div class="w-10 h-3 bg-slate-800"></div></div>
+                        <div id="b-short" class="building w-16 h-10 bg-slate-200 border-2 border-slate-300 rounded-t flex flex-col justify-evenly items-center shadow-lg"><div class="w-12 h-4 bg-slate-800"></div></div>
                     </div>
-                    <div class="mt-8">
+                    <div class="mt-6">
                         <label class="block text-sm font-medium text-slate-300 mb-2">地震頻率： <span id="freqLabel" class="text-blue-400 font-bold">低頻 (震高樓)</span></label>
                         <input type="range" id="freqSlider" min="1" max="100" value="10" class="w-full accent-rose-500">
                     </div>
@@ -247,19 +223,19 @@
             </div>
         </section>
 
-        <!-- 區塊 7：土壤液化 -->
+        <!-- 區塊 7：土壤液化互動 -->
         <section id="liquefaction" class="scroll-mt-24">
             <h2 class="text-3xl font-bold border-l-4 border-yellow-500 pl-4 mb-8">7. 土壤液化 (Soil Liquefaction)</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div>
-                    <p class="text-slate-300 leading-relaxed mb-6">強烈搖晃破壞了飽和沙土粒子的接觸結構，水壓升高使沙土失去承載力，轉變成液體懸浮狀態，導致上方建築物下沉傾斜。</p>
-                    <button id="btnLiquefaction" class="bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-3 px-6 rounded-lg transition transform hover:scale-105 shadow-lg w-full md:w-auto">
-                        ▶ 模擬強烈地震 (觸發液化)
+                    <p class="text-slate-300 mb-6">強烈搖晃破壞了飽和沙土粒子的接觸結構，水壓升高使沙土失去承載力，轉變成液體懸浮狀態，導致上方建築物下沉。</p>
+                    <button id="btnLiq" class="bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-3 px-6 rounded-lg transition transform hover:scale-105">
+                        ▶ 觸發地震與土壤液化
                     </button>
-                    <p id="liqStatus" class="mt-4 text-sm text-yellow-400 font-bold hidden">狀態：土壤液化，地表失去承載力...</p>
+                    <p id="liqStatus" class="mt-4 text-yellow-400 font-bold hidden">狀態：土壤液化，地表正在下陷...</p>
                 </div>
-                <div class="relative bg-slate-800 rounded-xl overflow-hidden border border-slate-700 h-72">
-                    <span class="absolute top-4 left-4 bg-yellow-500 text-black text-xs px-2 py-1 rounded z-10 font-bold">Canvas 動畫</span>
+                <div class="bg-slate-800 rounded-xl border border-slate-700 h-64 relative overflow-hidden">
+                    <span class="absolute top-2 left-2 bg-yellow-500 text-black text-xs px-2 py-1 rounded z-10 font-bold">動畫</span>
                     <canvas id="liqCanvas" class="w-full h-full bg-[#87CEEB]"></canvas>
                 </div>
             </div>
@@ -268,95 +244,77 @@
         <!-- 區塊 8：預報與預測 -->
         <section id="forecast" class="scroll-mt-24">
             <h2 class="text-3xl font-bold border-l-4 border-green-500 pl-4 mb-8">8. 預報 (Forecast) vs. 預測 (Prediction)</h2>
-            <div class="placeholder-img h-80 w-full mb-8 bg-white/5 p-4 rounded-xl border border-slate-700">
-                <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-14.png" alt="圖 1.2-14">
+            <div class="bg-white/5 p-4 rounded-xl border border-slate-700 mb-8 flex justify-center">
+                <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-14.png" alt="圖 1.2-14" class="max-h-80 object-contain">
             </div>
-            <p class="text-slate-300 mb-6 text-lg">圖 1.2-14 展示了模型不確定性。透過改變最大規模與衰減模型，危險區範圍顯著不同，這解釋了科學上的差異：</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-800 p-6 rounded-xl border-t-4 border-green-400 shadow-lg">
+                <div class="bg-slate-800 p-6 rounded-xl border-t-4 border-green-400">
                     <h3 class="text-xl font-bold text-green-400 mb-2">預報 (Forecast)</h3>
-                    <p class="text-slate-300 text-sm">長期且機率性（如未來50年機率）。是建築法規與都市計畫的依據，具備科學參考價值。</p>
+                    <p class="text-slate-300 text-sm">長期且機率性。如圖中評估未來50年機率。是建築法規的依據，具科學參考價值。</p>
                 </div>
-                <div class="bg-slate-800 p-6 rounded-xl border-t-4 border-red-400 shadow-lg">
+                <div class="bg-slate-800 p-6 rounded-xl border-t-4 border-red-400">
                     <h3 class="text-xl font-bold text-red-400 mb-2">預測 (Prediction)</h3>
-                    <p class="text-slate-300 text-sm">短期且明確（指出何時何地規模多大）。因斷層行為複雜不規律，目前精確預測極其困難。</p>
+                    <p class="text-slate-300 text-sm">短期且明確（指出何時何地規模多大）。因斷層行為複雜，目前精確預測極其困難。</p>
                 </div>
             </div>
         </section>
 
-        <!-- 區塊 9：Seismic Gap -->
+        <!-- 區塊 9：地震空區 -->
         <section id="gap" class="scroll-mt-24">
             <h2 class="text-3xl font-bold border-l-4 border-orange-500 pl-4 mb-8">9. 地震空區 (Seismic Gap)</h2>
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-12">
-                <div class="space-y-6 glass-panel p-6 rounded-xl">
-                    <div class="placeholder-img h-64 w-full bg-white/5 p-2 rounded">
-                        <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-15.png" alt="圖 1.2-15">
-                    </div>
+                <div class="glass-panel p-6 rounded-xl">
+                    <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-15.png" class="w-full h-48 object-contain mb-4 bg-white/5 rounded">
                     <h3 class="text-xl font-bold text-orange-400">圖 1.2-15：古地震序列</h3>
-                    <p class="text-sm text-slate-300">地震具「叢集性」與「不規律性」。間隔時間短至22年長至300年以上，讓精確預測變得困難。</p>
+                    <p class="text-sm text-slate-300">地震具「叢集性」與「不規律性」。間隔時間短至22年長至300年以上，精確預測十分困難。</p>
                 </div>
-                <div class="space-y-6 glass-panel p-6 rounded-xl">
-                    <div class="placeholder-img h-64 w-full bg-white/5 p-2 rounded">
-                        <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-16.png" alt="圖 1.2-16">
-                    </div>
+                <div class="glass-panel p-6 rounded-xl">
+                    <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-16.png" class="w-full h-48 object-contain mb-4 bg-white/5 rounded">
                     <h3 class="text-xl font-bold text-orange-400">圖 1.2-16：空區的填補</h3>
-                    <p class="text-sm text-slate-300">1989年 Loma Prieta 地震精確發生在長期安靜的「鎖定」區段，證實空區最終會以大地震補齊位移。</p>
+                    <p class="text-sm text-slate-300">1989年 Loma Prieta 地震精確發生在長期安靜的「鎖定」空區內，證實空區最終會以大地震補齊位移。</p>
                 </div>
             </div>
         </section>
 
         <!-- 區塊 10：預測方法 -->
         <section id="methods" class="scroll-mt-24">
-            <h2 class="text-3xl font-bold border-l-4 border-teal-500 pl-4 mb-8">10. 預測方法</h2>
+            <h2 class="text-3xl font-bold border-l-4 border-teal-500 pl-4 mb-8">10. 預測與評估方法</h2>
             <div class="space-y-4 max-w-4xl">
-                <div class="bg-slate-800 rounded-lg border border-slate-700 shadow-md">
-                    <button class="w-full px-6 py-4 text-left font-bold text-lg text-teal-300 hover:bg-slate-700 transition focus:outline-none" onclick="toggleAccordion('acc1', this)">
-                        探槽開挖與碳-14定年法 (Paleoseismology)
-                    </button>
-                    <div id="acc1" class="accordion-content bg-slate-800 border-t border-slate-700">
-                        <div class="p-6 text-slate-300">從沉積物尋找地表破裂痕跡，利用碳-14定年估算古代地震發生年份，評估復發週期。</div>
-                    </div>
+                <div class="bg-slate-800 rounded-lg border border-slate-700">
+                    <button class="w-full px-6 py-4 text-left font-bold text-lg text-teal-300 hover:bg-slate-700 transition" onclick="toggleAcc('acc1')">探槽開挖與碳-14定年法</button>
+                    <div id="acc1" class="accordion-content bg-slate-800 border-t border-slate-700"><div class="p-6 text-slate-300">從沉積物尋找地表破裂痕跡，利用碳-14定年估算古代地震發生年份，評估復發週期。</div></div>
                 </div>
-                <div class="bg-slate-800 rounded-lg border border-slate-700 shadow-md">
-                    <button class="w-full px-6 py-4 text-left font-bold text-lg text-teal-300 hover:bg-slate-700 transition focus:outline-none" onclick="toggleAccordion('acc2', this)">
-                        地震空區監測 (Seismic Gap Monitoring)
-                    </button>
-                    <div id="acc2" class="accordion-content bg-slate-800 border-t border-slate-700">
-                        <div class="p-6 text-slate-300">尋找長期缺乏微小地震活動的鎖定區段，其能量不斷累積，被視為未來高風險區。</div>
-                    </div>
+                <div class="bg-slate-800 rounded-lg border border-slate-700">
+                    <button class="w-full px-6 py-4 text-left font-bold text-lg text-teal-300 hover:bg-slate-700 transition" onclick="toggleAcc('acc2')">地震空區監測</button>
+                    <div id="acc2" class="accordion-content bg-slate-800 border-t border-slate-700"><div class="p-6 text-slate-300">尋找斷層上長期缺乏微小地震活動的鎖定區段，其能量不斷累積，被視為未來高風險區。</div></div>
                 </div>
             </div>
         </section>
 
         <!-- 區塊 11：核試爆監測 -->
         <section id="nuclear" class="scroll-mt-24">
-            <h2 class="text-3xl font-bold border-l-4 border-fuchsia-500 pl-4 mb-8">11. 監測核子試爆</h2>
-            <p class="text-slate-300 mb-8 text-lg">透過分析實體波震級 ($m_b$)，利用公式轉換反推爆炸能量，並能分辨震源性質差異。</p>
-            
-            <!-- 根據要求，已刪除 圖 1.2-19 的靜態圖片，僅保留 1.2-18 及下方互動波形比對 -->
-            <div class="glass-panel p-4 rounded-xl mb-12 max-w-2xl mx-auto">
-                <div class="placeholder-img h-64 w-full bg-white/5 p-2 rounded mb-4">
-                    <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-18.png" alt="圖 1.2-18">
-                </div>
-                <h3 class="text-lg font-bold text-fuchsia-400 text-center">圖 1.2-18：蘇聯核試產量監測</h3>
-                <p class="text-sm text-slate-300 mt-2 text-center">數據證實1976年條約生效後，核試點精確落在150-kiloton虛線下方，提供科學鐵證。</p>
+            <h2 class="text-3xl font-bold border-l-4 border-fuchsia-500 pl-4 mb-8">11. 監測核子試爆 (波形比對)</h2>
+            <div class="glass-panel p-6 rounded-xl mb-12 max-w-3xl mx-auto text-center">
+                <img src="https://raw.githubusercontent.com/rrrnnn0518-ux/learning_pygmt/main/sources/1.2-18.png" class="w-full h-64 object-contain mb-4 bg-white/5 rounded">
+                <h3 class="text-lg font-bold text-fuchsia-400">圖 1.2-18：蘇聯核試產量監測</h3>
+                <p class="text-sm text-slate-300">透過實體波反推爆炸能量。數據證實1976年條約生效後，核試點精確落在150-kiloton虛線下方。</p>
             </div>
 
             <!-- 互動：波形比對 -->
-            <div class="glass-panel p-8 rounded-xl border border-fuchsia-500/30 shadow-2xl shadow-fuchsia-900/20">
+            <div class="glass-panel p-8 rounded-xl border border-fuchsia-500/30">
                 <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                    <h3 class="text-xl font-bold text-white flex items-center"><span class="bg-fuchsia-500 text-white text-xs px-2 py-1 rounded mr-2">互動</span> 波形比對：自然地震 vs 核子試爆</h3>
+                    <h3 class="text-xl font-bold text-white"><span class="bg-fuchsia-500 px-2 py-1 rounded mr-2 text-xs">互動</span>波形比對：地震 vs 核爆</h3>
                     <div class="flex bg-slate-800 rounded-lg p-1 border border-slate-600">
                         <button id="btnEq" class="px-6 py-2 rounded-md text-sm font-bold bg-fuchsia-600 text-white transition">自然地震 (斷層)</button>
-                        <button id="btnNuke" class="px-6 py-2 rounded-md text-sm font-bold text-slate-400 hover:bg-slate-700 transition">核子試爆 (壓力源)</button>
+                        <button id="btnNuke" class="px-6 py-2 rounded-md text-sm font-bold text-slate-400 hover:text-white transition">核子試爆 (壓力源)</button>
                     </div>
                 </div>
-                <div class="relative h-64 bg-[#0a0f1a] rounded-lg border-2 border-slate-600 overflow-hidden">
-                    <canvas id="waveformCanvas" class="w-full h-full"></canvas>
+                <div class="relative h-64 bg-[#0a0f1a] rounded-lg border-2 border-slate-600">
+                    <canvas id="waveCanvas" class="w-full h-full"></canvas>
                     <div class="absolute top-4 left-[10%] text-yellow-400 text-xs font-bold bg-black/70 px-2 py-1 rounded">P 波</div>
-                    <div class="absolute top-4 left-[50%] text-cyan-400 text-xs font-bold bg-black/70 px-2 py-1 rounded">S 波 / 表面波</div>
+                    <div class="absolute top-4 left-[60%] text-cyan-400 text-xs font-bold bg-black/70 px-2 py-1 rounded">S 波 / 表面波</div>
                 </div>
-                <div class="mt-6 text-base text-slate-300 bg-slate-800/80 p-4 rounded-lg border-l-4 border-fuchsia-500" id="waveDesc">
+                <div class="mt-6 text-slate-300 bg-slate-800 p-4 rounded-lg border-l-4 border-fuchsia-500" id="waveDesc">
                     <strong>自然地震 (斷層錯動)：</strong> 剪力源，產生顯著的 S 波與表面波，初達 P 波相對較弱。
                 </div>
             </div>
@@ -364,106 +322,124 @@
 
     </main>
 
-    <!-- JavaScript 動畫與圖表邏輯 (完整無截斷) -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-8 text-center text-slate-500 text-sm">
+        <p>基於參考資料建立之地震學教育互動網頁</p>
+    </footer>
+
+    <!-- 所有 JavaScript 邏輯 (保證不被截斷) -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        // 1. 手風琴選單
+        window.toggleAcc = function(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('open');
+        };
 
-            // --- 10. 手風琴 ---
-            window.toggleAccordion = function(id, btn) {
-                const content = document.getElementById(id);
-                if(content.classList.contains('open')) {
-                    content.classList.remove('open');
-                } else {
-                    content.classList.add('open');
+        // 2. Chart.js 衰減圖表
+        const distSlider = document.getElementById('distSlider');
+        const qSlider = document.getElementById('qSlider');
+        const distVal = document.getElementById('distVal');
+        const qVal = document.getElementById('qVal');
+        const ctxChart = document.getElementById('attenuationChart').getContext('2d');
+        
+        let attenChart = new Chart(ctxChart, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 50}, (_, i) => (i + 1) * 10),
+                datasets:[{ label: '振幅', borderColor: '#a855f7', backgroundColor: 'rgba(168, 85, 247, 0.2)', fill: true, pointRadius: 0, data: [] }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100 } } }
+        });
+
+        function updateChart() {
+            const r = parseInt(distSlider.value), q = parseInt(qSlider.value);
+            distVal.innerText = r + " km"; qVal.innerText = q;
+            
+            attenChart.data.datasets[0].data = attenChart.data.labels.map(x => Math.min(1000 * (1/Math.sqrt(x)) * Math.exp((-Math.PI * 2 * x) / (q * 3)), 100));
+            attenChart.data.datasets[0].pointRadius = attenChart.data.labels.map(x => x === r ? 6 : 0);
+            attenChart.data.datasets[0].pointBackgroundColor = attenChart.data.labels.map(x => x === r ? '#f0abfc' : 'transparent');
+            attenChart.update();
+        }
+        distSlider.addEventListener('input', updateChart);
+        qSlider.addEventListener('input', updateChart);
+        updateChart();
+
+        // 3. 建築共振
+        const fSlider = document.getElementById('freqSlider');
+        const fLabel = document.getElementById('freqLabel');
+        const bT = document.getElementById('b-tall'), bM = document.getElementById('b-med'), bS = document.getElementById('b-short');
+        
+        fSlider.addEventListener('input', (e) => {
+            const v = parseInt(e.target.value);
+            bT.classList.remove('resonating'); bM.classList.remove('resonating'); bS.classList.remove('resonating');
+            if(v < 33) { fLabel.innerText="低頻"; fLabel.className="text-blue-400 font-bold"; if(v>10 && v<30) bT.classList.add('resonating'); }
+            else if(v < 66) { fLabel.innerText="中頻"; fLabel.className="text-yellow-400 font-bold"; if(v>40 && v<60) bM.classList.add('resonating'); }
+            else { fLabel.innerText="高頻"; fLabel.className="text-rose-400 font-bold"; if(v>75 && v<95) bS.classList.add('resonating'); }
+        });
+
+        // 4. 土壤液化 Canvas 動畫
+        const cLiq = document.getElementById('liqCanvas'), ctxL = cLiq.getContext('2d');
+        const btnLiq = document.getElementById('btnLiq'), statusLiq = document.getElementById('liqStatus');
+        let isQuake = false, buildY = 0, buildAng = 0;
+
+        function drawLiq() {
+            cLiq.width = cLiq.parentElement.clientWidth; cLiq.height = cLiq.parentElement.clientHeight;
+            ctxL.clearRect(0, 0, cLiq.width, cLiq.height);
+            
+            // 畫土層
+            ctxL.fillStyle = isQuake ? '#d97706' : '#b45309';
+            ctxL.fillRect(0, cLiq.height - 80, cLiq.width, 80);
+            
+            // 畫建築
+            ctxL.save();
+            ctxL.translate(cLiq.width/2, cLiq.height - 80 + buildY);
+            if(isQuake) { buildY += 0.2; buildAng += 0.005; ctxL.translate(Math.random()*4-2, 0); }
+            ctxL.rotate(buildAng);
+            ctxL.fillStyle = '#334155'; ctxL.fillRect(-30, -100, 60, 100);
+            ctxL.restore();
+            
+            if(buildY > 60) { isQuake = false; statusLiq.innerText = "狀態：建築已下陷沉沒"; }
+            requestAnimationFrame(drawLiq);
+        }
+        drawLiq();
+        btnLiq.addEventListener('click', () => { isQuake = true; buildY = 0; buildAng = 0; statusLiq.classList.remove('hidden'); statusLiq.innerText = "狀態：強烈搖晃，土壤液化中..."; });
+
+        // 5. 波形比對 Canvas 動畫
+        const cW = document.getElementById('waveCanvas'), ctxW = cW.getContext('2d');
+        const btnEq = document.getElementById('btnEq'), btnNuke = document.getElementById('btnNuke'), wDesc = document.getElementById('waveDesc');
+        let waveMode = 'eq', phase = 0;
+
+        function drawWave() {
+            cW.width = cW.parentElement.clientWidth; cW.height = cW.parentElement.clientHeight;
+            ctxW.clearRect(0, 0, cW.width, cW.height);
+            ctxW.beginPath();
+            ctxW.strokeStyle = waveMode === 'eq' ? '#a855f7' : '#ef4444';
+            ctxW.lineWidth = 2;
+            
+            for(let i=0; i<cW.width; i++) {
+                let y = cW.height/2;
+                if(waveMode === 'eq') { // 地震：小P 大S
+                    if(i > cW.width*0.1 && i < cW.width*0.3) y += Math.sin(i*0.5 + phase)*10;
+                    else if(i >= cW.width*0.4) y += Math.sin(i*0.2 + phase)*40 * Math.exp(-(i-cW.width*0.4)/200);
+                } else { // 核爆：大P 小S
+                    if(i > cW.width*0.1 && i < cW.width*0.3) y += Math.sin(i*0.5 + phase)*35 * Math.exp(-(i-cW.width*0.1)/50);
+                    else if(i >= cW.width*0.4) y += Math.sin(i*0.2 + phase)*10 * Math.exp(-(i-cW.width*0.4)/200);
                 }
-            };
-
-            // --- 4. Chart.js 衰減圖 ---
-            const distSlider = document.getElementById('distSlider');
-            const qSlider = document.getElementById('qSlider');
-            const distVal = document.getElementById('distVal');
-            const qVal = document.getElementById('qVal');
-            const ctxChart = document.getElementById('attenuationChart').getContext('2d');
-
-            let attenChart = new Chart(ctxChart, {
-                type: 'line',
-                data: {
-                    labels: Array.from({length: 50}, (_, i) => (i + 1) * 10),
-                    datasets:[{
-                        label: '地震波振幅',
-                        borderColor: '#a855f7',
-                        backgroundColor: 'rgba(168, 85, 247, 0.2)',
-                        borderWidth: 2,
-                        pointRadius: 0,
-                        fill: true,
-                        data: []
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false, animation: { duration: 200 },
-                    scales: {
-                        x: { title: { display: true, text: '距離 r (km)', color: '#94a3b8' }, ticks: { color: '#64748b' } },
-                        y: { title: { display: true, text: '振幅', color: '#94a3b8' }, min: 0, max: 100, ticks: { color: '#64748b' } }
-                    }
-                }
-            });
-
-            function updateChart() {
-                const R_focus = parseInt(distSlider.value);
-                const Q = parseInt(qSlider.value);
-                distVal.innerText = R_focus + " km";
-                qVal.innerText = Q;
-                
-                const newData = attenChart.data.labels.map(R => {
-                    let A = 1000 * (1/Math.sqrt(R)) * Math.exp((-Math.PI * 2 * R) / (Q * 3));
-                    return Math.min(A, 100);
-                });
-                attenChart.data.datasets[0].data = newData;
-
-                const pointColors = attenChart.data.labels.map(R => R === R_focus ? '#f0abfc' : 'rgba(0,0,0,0)');
-                const pointRadii = attenChart.data.labels.map(R => R === R_focus ? 6 : 0);
-                attenChart.data.datasets[0].pointBackgroundColor = pointColors;
-                attenChart.data.datasets[0].pointBorderColor = pointColors;
-                attenChart.data.datasets[0].pointRadius = pointRadii;
-                attenChart.update();
+                i===0 ? ctxW.moveTo(i, y) : ctxW.lineTo(i, y);
             }
-            distSlider.addEventListener('input', updateChart);
-            qSlider.addEventListener('input', updateChart);
-            updateChart();
+            ctxW.stroke();
+            phase -= 0.1;
+            requestAnimationFrame(drawWave);
+        }
+        drawWave();
 
-            // --- 6. 建築共振 ---
-            const freqSlider = document.getElementById('freqSlider');
-            const freqLabel = document.getElementById('freqLabel');
-            const bTall = document.getElementById('b-tall');
-            const bMed = document.getElementById('b-med');
-            const bShort = document.getElementById('b-short');
-
-            freqSlider.addEventListener('input', (e) => {
-                const val = parseInt(e.target.value);
-                bTall.classList.remove('resonating'); bMed.classList.remove('resonating'); bShort.classList.remove('resonating');
-                if (val < 33) {
-                    freqLabel.innerText = "低頻 (震高樓)"; freqLabel.className = "text-blue-400 font-bold";
-                    if(val > 10 && val < 30) bTall.classList.add('resonating');
-                } else if (val < 66) {
-                    freqLabel.innerText = "中頻 (震中樓)"; freqLabel.className = "text-yellow-400 font-bold";
-                    if(val > 40 && val < 60) bMed.classList.add('resonating');
-                } else {
-                    freqLabel.innerText = "高頻 (震矮房)"; freqLabel.className = "text-rose-400 font-bold";
-                    if(val > 75 && val < 95) bShort.classList.add('resonating');
-                }
-            });
-
-            // --- 7. 土壤液化 Canvas ---
-            const canvasLiq = document.getElementById('liqCanvas');
-            const ctxLiq = canvasLiq.getContext('2d');
-            const btnLiq = document.getElementById('btnLiquefaction');
-            const liqStatus = document.getElementById('liqStatus');
-            let isQuake = false;
-            let building = { y: 150, angle: 0 };
-            let particles =[];
-
-            function resizeLiq() {
-                canvasLiq.width = canvasLiq.parentElement.clientWidth;
-                canvasLiq.height = canvasLiq.parentElement.clientHeight;
-                building.y = canvasLiq.height - 110;
-                particles =
+        btnEq.addEventListener('click', () => { 
+            waveMode='eq'; btnEq.className="px-6 py-2 rounded-md text-sm font-bold bg-fuchsia-600 text-white"; btnNuke.className="px-6 py-2 rounded-md text-sm font-bold text-slate-400 hover:bg-slate-700 hover:text-white";
+            wDesc.innerHTML = "<strong>自然地震 (斷層錯動)：</strong> 剪力源，產生顯著的 S 波與表面波，初達 P 波相對較弱。";
+        });
+        btnNuke.addEventListener('click', () => { 
+            waveMode='nuke'; btnNuke.className="px-6 py-2 rounded-md text-sm font-bold bg-fuchsia-600 text-white"; btnEq.className="px-6 py-2 rounded-md text-sm font-bold text-slate-400 hover:bg-slate-700 hover:text-white";
+            wDesc.innerHTML = "<strong>核子試爆 (壓力源)：</strong> 向外擴張的爆炸壓力源，產生極強大的 P 波，但 S 波相對非常微弱。";
+        });
+    </script>
+</body>
+</html>
